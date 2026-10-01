@@ -70,6 +70,8 @@ include = ["canonforge*"]
 canonforge = [
     "data/*.yaml",
     "data/*.json",
-    "schemas/*.json"
+    "data/obsidian/*",
+    "schemas/*.json",
+    "templates/*.md"
 ]
 

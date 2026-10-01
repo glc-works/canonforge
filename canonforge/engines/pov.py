@@ -58,7 +58,7 @@ def split_sections(text: str, default_pov: str) -> List[Dict[str, Any]]:
                     "pov": current_pov,
                     "start_line": start_line_no,
                     "end_line": line_no - 1,
-                    "text": "\n".join(current_lines),
+                    "text": "\n".join(l[1] for l in current_lines),
                     "lines": list(current_lines)
                 })
                 sec_idx += 1

@@ -1,148 +1,25 @@
 """
+canonforge/engines/obsidian.py
+
 CanonForge Obsidian Integration Engine (cf obsidian install)
 --------------------------------------------------------------------------------
 Installs and activates CanonForge Studio plugin in any Obsidian vault:
 - @mention omni-entity autocomplete
-- Sidebar Lore & Cast Inspector
-- Continuity and prohibited term linter in live editor
+- Sidebar Lore & Cast Inspector with live 5-senses radar
+- Auto-scaffolds standard OKF v0.3 note templates (_templates/)
+100% Free of Universe-Specific Hardcoding.
 """
 
 import sys
+import os
 import json
 import shutil
 from pathlib import Path
 from typing import Optional, Dict, Any
 
-PLUGIN_MANIFEST = {
-    "id": "canonforge-studio",
-    "name": "CanonForge Studio",
-    "version": "1.0.0",
-    "minAppVersion": "1.0.0",
-    "description": "Git-Native authoring tools: @mention autocomplete, sidebar lore inspector, and continuity guard.",
-    "author": "GLC Works",
-    "isDesktopOnly": True
-}
-
-PLUGIN_JS_TEMPLATE = """const { Plugin, EditorSuggest, ItemView, Notice } = require("obsidian");
-
-const VIEW_TYPE_LORE = "canonforge-lore-inspector";
-
-class CanonForgeStudioPlugin extends Plugin {
-  async onload() {
-    this.entities = [];
-    this.entityMap = new Map();
-
-    this.app.workspace.onLayoutReady(() => {
-      this.buildLoreIndex();
-    });
-
-    this.registerEvent(
-      this.app.metadataCache.on("resolved", () => {
-        this.buildLoreIndex();
-      })
-    );
-
-    this.registerView(VIEW_TYPE_LORE, (leaf) => new LoreView(leaf, this));
-
-    this.addRibbonIcon("book-open", "CanonForge Lore Inspector", () => {
-      this.activateLoreView();
-    });
-
-    this.addCommand({
-      id: "cf-open-inspector",
-      name: "Open Lore & Cast Inspector",
-      callback: () => this.activateLoreView()
-    });
-
-    this.addCommand({
-      id: "cf-reindex-lore",
-      name: "Re-index All Canon Entities",
-      callback: () => {
-        this.buildLoreIndex();
-        new Notice(`✨ CanonForge: Re-indexed ${this.entities.length} canonical lore entities.`);
-      }
-    });
-  }
-
-  onunload() {
-    this.app.workspace.detachLeavesOfType(VIEW_TYPE_LORE);
-  }
-
-  buildLoreIndex() {
-    const files = this.app.vault.getMarkdownFiles();
-    this.entities = [];
-    this.entityMap.clear();
-
-    for (const file of files) {
-      if (file.path.includes("wiki/") || file.path.includes("terms/")) {
-        const cache = this.app.metadataCache.getFileCache(file);
-        const fm = cache?.frontmatter || {};
-        const title = fm.title || fm.name || file.basename.replace(/-/g, " ");
-        const entity = {
-          id: fm.char_id || fm.place_id || file.basename,
-          name: title,
-          path: file.path,
-          role: fm.role || fm.location_kind || "Entity",
-          faction: fm.faction || fm.governing_faction || "Neutral"
-        };
-        this.entities.push(entity);
-        this.entityMap.set(entity.id, entity);
-      }
-    }
-  }
-
-  async activateLoreView() {
-    const { workspace } = this.app;
-    let leaf = workspace.getLeavesOfType(VIEW_TYPE_LORE)[0];
-    if (!leaf) {
-      const rightLeaf = workspace.getRightLeaf(false);
-      if (rightLeaf) {
-        await rightLeaf.setViewState({ type: VIEW_TYPE_LORE, active: true });
-        leaf = rightLeaf;
-      }
-    }
-    if (leaf) workspace.revealLeaf(leaf);
-  }
-}
-
-class LoreView extends ItemView {
-  constructor(leaf, plugin) {
-    super(leaf);
-    this.plugin = plugin;
-  }
-  getViewType() { return VIEW_TYPE_LORE; }
-  getDisplayText() { return "CanonForge Lore Inspector"; }
-  getIcon() { return "book-open"; }
-  async onOpen() {
-    const container = this.containerEl.children[1];
-    container.empty();
-    container.createEl("h3", { text: "📖 CanonForge Lore & Cast" });
-    const count = container.createEl("p", { text: `Registered entities: ${this.plugin.entities.length}` });
-    const list = container.createEl("ul");
-    for (const ent of this.plugin.entities.slice(0, 30)) {
-      const item = list.createEl("li");
-      item.createEl("strong", { text: ent.name });
-      item.createEl("span", { text: ` (${ent.role} - ${ent.faction})` });
-    }
-  }
-}
-
-module.exports = CanonForgeStudioPlugin;
-"""
-
-PLUGIN_CSS_TEMPLATE = """
-.canonforge-lore-inspector h3 {
-  margin-top: 10px;
-  color: var(--text-accent);
-}
-.canonforge-lore-inspector ul {
-  padding-left: 15px;
-}
-.canonforge-lore-inspector li {
-  margin-bottom: 6px;
-  font-size: 0.9em;
-}
-"""
+PACKAGE_ROOT = Path(__file__).resolve().parent.parent
+OBSIDIAN_DATA_DIR = PACKAGE_ROOT / "data" / "obsidian"
+TEMPLATES_DIR = PACKAGE_ROOT / "templates"
 
 def resolve_vault_dir(vault_arg: Optional[str] = None) -> Path:
     """Locate target Obsidian vault directory."""
@@ -159,20 +36,30 @@ def resolve_vault_dir(vault_arg: Optional[str] = None) -> Path:
             return cand
     return curr
 
-def install_obsidian_plugin(vault_dir: Path) -> Path:
-    """Install and enable CanonForge Studio plugin in vault."""
+def install_obsidian_plugin(vault_dir: Path, install_templates: bool = True) -> Path:
+    """Install and enable CanonForge Studio plugin and OKF templates in vault."""
     obsidian_dir = vault_dir / ".obsidian"
     obsidian_dir.mkdir(parents=True, exist_ok=True)
 
     plugin_dir = obsidian_dir / "plugins" / "canonforge-studio"
     plugin_dir.mkdir(parents=True, exist_ok=True)
 
-    # Write plugin files
-    (plugin_dir / "manifest.json").write_text(json.dumps(PLUGIN_MANIFEST, indent=2), encoding="utf-8")
-    (plugin_dir / "main.js").write_text(PLUGIN_JS_TEMPLATE, encoding="utf-8")
-    (plugin_dir / "styles.css").write_text(PLUGIN_CSS_TEMPLATE, encoding="utf-8")
+    # 1. Copy plugin files from data/obsidian
+    if OBSIDIAN_DATA_DIR.exists():
+        for f in OBSIDIAN_DATA_DIR.glob("*.*"):
+            shutil.copy(f, plugin_dir / f.name)
+    else:
+        # Fallback minimal plugin if data directory is missing
+        (plugin_dir / "manifest.json").write_text(json.dumps({
+            "id": "canonforge-studio",
+            "name": "CanonForge Studio",
+            "version": "1.1.0",
+            "minAppVersion": "1.0.0",
+            "isDesktopOnly": True
+        }, indent=2), encoding="utf-8")
+        (plugin_dir / "main.js").write_text("const { Plugin } = require('obsidian'); module.exports = class extends Plugin {};", encoding="utf-8")
 
-    # Enable in community-plugins.json
+    # 2. Enable in community-plugins.json
     cp_path = obsidian_dir / "community-plugins.json"
     enabled_plugins = []
     if cp_path.is_file():
@@ -185,24 +72,34 @@ def install_obsidian_plugin(vault_dir: Path) -> Path:
         enabled_plugins.append("canonforge-studio")
         cp_path.write_text(json.dumps(enabled_plugins, indent=2), encoding="utf-8")
 
+    # 3. Install OKF v0.3 Markdown Templates (_templates/)
+    if install_templates and TEMPLATES_DIR.exists():
+        vault_templates = vault_dir / "_templates"
+        vault_templates.mkdir(parents=True, exist_ok=True)
+        for t_file in TEMPLATES_DIR.glob("*.md"):
+            dest_file = vault_templates / f"{t_file.stem.title()}-Template.md"
+            if not dest_file.exists():
+                shutil.copy(t_file, dest_file)
+
     return plugin_dir
 
 def main():
     import argparse
     parser = argparse.ArgumentParser(description="CanonForge Obsidian Integration")
-    subparsers = parser.add_subparsers(dest="obsidian_action", help="Obsidian action")
-
-    p_inst = subparsers.add_parser("install", help="Install CanonForge Studio plugin into vault")
-    p_inst.add_argument("--vault", "-v", help="Path to Obsidian vault (defaults to active workspace)")
+    parser.add_argument("action", nargs="?", default="install", help="Action (install)")
+    parser.add_argument("--vault", "-v", help="Path to Obsidian vault (defaults to active workspace)")
+    parser.add_argument("--no-templates", action="store_true", help="Do not scaffold _templates folder")
 
     args = parser.parse_args()
     vault = resolve_vault_dir(getattr(args, "vault", None))
-    p_dir = install_obsidian_plugin(vault)
+    p_dir = install_obsidian_plugin(vault, install_templates=not getattr(args, "no_templates", False))
 
-    print(f"\n🔮 CanonForge Obsidian Plugin Installed!")
-    print(f"   Vault Location : {vault}")
-    print(f"   Plugin Directory: {p_dir}")
-    print(f"   Status          : Enabled in community-plugins.json")
+    print(f"\n🔮 CanonForge Obsidian Studio Installed!")
+    print(f"   Vault Location   : {vault}")
+    print(f"   Plugin Directory : {p_dir}")
+    print(f"   Plugin Status    : Enabled in community-plugins.json")
+    if (vault / "_templates").is_dir():
+        print(f"   OKF Templates    : Ready in {vault / '_templates'}")
     print("\n💡 Open Obsidian and press Cmd+R (or reload community plugins) to activate.\n")
 
 if __name__ == "__main__":

@@ -1,0 +1,9 @@
+{
+  "id": "canonforge-studio",
+  "name": "CanonForge Studio",
+  "version": "1.1.0",
+  "minAppVersion": "1.0.0",
+  "description": "Git-Native literary engineering: @mention lore autocomplete, live 5-senses radar, and active chapter inspector.",
+  "author": "GLC Works",
+  "isDesktopOnly": true
+}
