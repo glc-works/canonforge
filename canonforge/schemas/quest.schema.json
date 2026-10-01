@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Convergence Quest Entity Schema (OKF v0.3)",
+  "type": "object",
+  "required": ["okf_version", "title", "type", "id", "quest_tier", "giver", "location"],
+  "properties": {
+    "okf_version": {
+      "type": "string",
+      "enum": ["0.3"]
+    },
+    "title": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["Quest Entity"]
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^quest_[a-z0-9_]+$"
+    },
+    "quest_tier": {
+      "type": "string",
+      "enum": ["prologue", "main_story", "faction_arc", "side_story", "raid_climax"]
+    },
+    "recommended_item_power": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "giver": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "novel_scene_counterpart": {
+      "type": "string"
+    },
+    "dialogue_script": {
+      "type": "string"
+    },
+    "objectives": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "rewards": {
+      "type": "object",
+      "properties": {
+        "exp": { "type": "integer" },
+        "currency_ks": { "type": "integer" },
+        "faction_rep": { "type": "string" },
+        "rep_amount": { "type": "integer" },
+        "item_rewards": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "labels": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

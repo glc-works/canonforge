@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Convergence Equipment Entity Schema (OKF v0.3)",
+  "type": "object",
+  "required": ["okf_version", "title", "type", "id", "equipment_type", "slot", "rarity"],
+  "properties": {
+    "okf_version": {
+      "type": "string",
+      "enum": ["0.3"]
+    },
+    "title": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["Equipment Entity"]
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^eq_[a-z0-9_]+$"
+    },
+    "equipment_type": {
+      "type": "string",
+      "enum": ["Weapon", "Armor", "Accessory", "Relic"]
+    },
+    "slot": {
+      "type": "string",
+      "enum": ["Mainhand", "Offhand", "Twohand", "Head", "Chest", "Legs", "Accessory"]
+    },
+    "rarity": {
+      "type": "string",
+      "enum": ["Common", "Uncommon", "Rare", "Epic", "Legendary"]
+    },
+    "job_class": {
+      "type": "string"
+    },
+    "terrestrial_element": {
+      "type": "string",
+      "enum": ["Fire", "Wind", "Water", "Earth", "None"]
+    },
+    "master_polarity": {
+      "type": "string",
+      "enum": ["Light", "Dark", "Neutral"]
+    },
+    "item_power": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "base_atk": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "base_def": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "granted_skill": {
+      "type": "string",
+      "description": "Name or ID of skill granted when equipped"
+    },
+    "labels": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

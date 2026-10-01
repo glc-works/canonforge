@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OKF Table of Contents Manifest Schema (Level 4)",
+  "type": "object",
+  "required": ["book", "acts"],
+  "properties": {
+    "book": {
+      "type": "object",
+      "required": ["id", "book_number", "title"],
+      "properties": {
+        "id": { "type": "string" },
+        "book_number": { "type": "integer" },
+        "series_id": { "type": "string" },
+        "title": { "type": "string" },
+        "status": { "type": "string" },
+        "act_structure": { "type": "string" }
+      }
+    },
+    "acts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["act", "title", "chapters"],
+        "properties": {
+          "act": { "type": "integer" },
+          "title": { "type": "string" },
+          "chapters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["file", "title", "chapter_number"],
+              "properties": {
+                "file": { "type": "string" },
+                "title": { "type": "string" },
+                "chapter_number": { "type": "integer" },
+                "pov": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

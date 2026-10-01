@@ -1,5 +1,5 @@
 """
-OKF Studio: Standard Library Test Suite
+CanonForge: Standard Library Test Suite
 """
 
 import sys
@@ -10,11 +10,11 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
-from okf_studio.cli import discover_universes, find_workspace_root
-from okf_studio.universe_cli import verify_universe
-from okf_studio.engines import sensory, sensory_dictionary, pov, prose
+from canonforge.cli import discover_universes, find_workspace_root
+from canonforge.universe_cli import verify_universe
+from canonforge.engines import sensory, sensory_dictionary, pov, prose
 
-class TestOKFStudio(unittest.TestCase):
+class TestCanonForge(unittest.TestCase):
     def test_discover_demo_universe(self):
         universes = discover_universes(REPO_ROOT)
         self.assertGreaterEqual(len(universes), 1)

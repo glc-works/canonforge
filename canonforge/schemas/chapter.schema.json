@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ChapterEntitySchema",
+  "description": "Authoritative OKF v0.3 schema for novel chapter frontmatter metadata",
+  "type": "object",
+  "required": [
+    "okf_version",
+    "title",
+    "type",
+    "book",
+    "act",
+    "chapter",
+    "pov",
+    "setting",
+    "timeline",
+    "characters"
+  ],
+  "properties": {
+    "okf_version": {
+      "type": "string",
+      "enum": ["0.3"]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "type": {
+      "type": "string",
+      "enum": ["Chapter Entity", "Novel Scene"]
+    },
+    "mode": {
+      "type": "string",
+      "default": "manuscript"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "revised", "polished", "canonical"]
+    },
+    "authority": {
+      "type": "string",
+      "default": "canon-lead"
+    },
+    "universe": {
+      "type": "string",
+      "default": "convergence"
+    },
+    "series": {
+      "type": "string"
+    },
+    "book": {
+      "type": "string",
+      "minLength": 1
+    },
+    "act": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "chapter": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "pov": {
+      "type": "string",
+      "minLength": 1
+    },
+    "setting": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timeline": {
+      "type": "string",
+      "minLength": 1
+    },
+    "word_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "target_words": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "characters": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "key_conflicts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}

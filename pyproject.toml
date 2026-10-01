@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "okf-studio"
+name = "canonforge"
 version = "0.3.0"
-description = "The Git-Native Multi-Universe Authoring, Sensory Radar & Integrity Studio for Novelists"
+description = "The Git-Native Literary Engineering Studio & Multi-Universe Canon Orchestrator for Novelists"
 readme = "README.md"
 authors = [
     { name = "GLC Works", email = "dev@glc.works" }
@@ -26,6 +26,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 keywords = [
+    "canonforge",
     "novel-writing",
     "worldbuilding",
     "open-knowledge-fiction",
@@ -50,20 +51,27 @@ dev = [
 ]
 
 [project.scripts]
-okf = "okf_studio.cli:main"
-novel = "okf_studio.cli:main"
-ax = "okf_studio.universe_cli:main"
+cf = "canonforge.cli:main"
+canonforge = "canonforge.cli:main"
+okf = "canonforge.cli:main"
+novel = "canonforge.cli:main"
+ax = "canonforge.universe_cli:main"
 
 [project.urls]
-Homepage = "https://github.com/glc-works/okf-studio"
-Repository = "https://github.com/glc-works/okf-studio.git"
-Issues = "https://github.com/glc-works/okf-studio/issues"
+Homepage = "https://github.com/glc-works/canonforge"
+Repository = "https://github.com/glc-works/canonforge.git"
+Issues = "https://github.com/glc-works/canonforge/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["okf_studio*"]
+include = ["canonforge*", "okf_studio*"]
 
 [tool.setuptools.package-data]
+canonforge = [
+    "data/*.yaml",
+    "data/*.json",
+    "schemas/*.json"
+]
 okf_studio = [
     "data/*.yaml",
     "data/*.json",
