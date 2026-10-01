@@ -1,0 +1,36 @@
+canonforge/__init__.py
+  h_fcacc84ac57fba 8
+canonforge/cli/authoring.py
+  h_fcacc84ac57fba 1-144
+canonforge/cli/groups.py
+  h_fcacc84ac57fba 52
+canonforge/cli/main.py
+  h_fcacc84ac57fba 147,152-183,221-226,320-391
+canonforge/engines/combat/fighter.py
+  h_fcacc84ac57fba 8-9,11-16,19-22
+canonforge/engines/exporter/metadata.py
+  h_fcacc84ac57fba 7,68
+canonforge/engines/metrics/cli.py
+  h_fcacc84ac57fba 8,26-27,34,37,41,43-44,49
+canonforge/engines/metrics/registry.py
+  h_fcacc84ac57fba 18
+canonforge/engines/metrics/reporter.py
+  h_fcacc84ac57fba 8,151,157-158,163-170
+canonforge/engines/rename.py
+  h_fcacc84ac57fba 1-418
+canonforge/universe_cli.py
+  h_fcacc84ac57fba 5-6,9,11
+pyproject.toml
+  h_fcacc84ac57fba 7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "16938cb189e2022e448e5143b0ecec0ad62a486a",
+  "prompts": {},
+  "humans": {
+    "h_fcacc84ac57fba": {
+      "author": "Cid <308343041+convergenceID@users.noreply.github.com>"
+    }
+  }
+}
