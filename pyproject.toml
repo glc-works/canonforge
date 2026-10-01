@@ -1,0 +1,71 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "okf-studio"
+version = "0.3.0"
+description = "The Git-Native Multi-Universe Authoring, Sensory Radar & Integrity Studio for Novelists"
+readme = "README.md"
+authors = [
+    { name = "GLC Works", email = "dev@glc.works" }
+]
+license = { text = "MIT" }
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "Topic :: Text Editors :: Word Processors",
+    "Topic :: Software Development :: Quality Assurance",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+keywords = [
+    "novel-writing",
+    "worldbuilding",
+    "open-knowledge-fiction",
+    "sensory-radar",
+    "anti-slop",
+    "deep-pov",
+    "manuscript-compiler",
+    "fiction-audit"
+]
+requires-python = ">=3.9"
+dependencies = [
+    "pyyaml>=6.0",
+    "jsonschema>=4.0.0",
+    "tabulate>=0.9.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0"
+]
+
+[project.scripts]
+okf = "okf_studio.cli:main"
+novel = "okf_studio.cli:main"
+ax = "okf_studio.universe_cli:main"
+
+[project.urls]
+Homepage = "https://github.com/glc-works/okf-studio"
+Repository = "https://github.com/glc-works/okf-studio.git"
+Issues = "https://github.com/glc-works/okf-studio/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["okf_studio*"]
+
+[tool.setuptools.package-data]
+okf_studio = [
+    "data/*.yaml",
+    "data/*.json",
+    "schemas/*.json"
+]

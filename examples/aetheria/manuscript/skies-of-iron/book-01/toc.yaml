@@ -1,0 +1,20 @@
+book:
+  id: "book-01"
+  book_number: 1
+  series_id: "skies-of-iron"
+  title: "The Iron Skiff"
+  status: "in-progress"
+  act_structure: "3-act"
+
+acts:
+  - act: 1
+    title: "The Low Clouds"
+    chapters:
+      - file: "ch01-the-iron-skiff.md"
+        title: "The Iron Skiff"
+        chapter_number: 1
+        pov: "Lyra Valen"
+      - file: "ch02-the-cloud-furnace.md"
+        title: "The Cloud Furnace"
+        chapter_number: 2
+        pov: "Captain Orlov"

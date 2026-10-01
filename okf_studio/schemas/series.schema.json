@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OKF Series Manifest Schema (Level 3)",
+  "type": "object",
+  "required": ["series_id", "title", "universe"],
+  "properties": {
+    "series_id": { "type": "string" },
+    "title": { "type": "string" },
+    "universe": { "type": "string" },
+    "status": { "type": "string" },
+    "author": { "type": "string" },
+    "summary": { "type": "string" },
+    "books": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["book_number", "directory", "title"],
+        "properties": {
+          "book_number": { "type": "integer" },
+          "directory": { "type": "string" },
+          "title": { "type": "string" },
+          "status": { "type": "string" }
+        }
+      }
+    }
+  }
+}

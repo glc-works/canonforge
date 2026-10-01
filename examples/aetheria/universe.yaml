@@ -1,0 +1,39 @@
+universe_id: "aetheria"
+display_name: "Aetheria: Skies of Iron"
+version: "1.0.0"
+authority: "canon-lead"
+status: "canonical"
+
+genre:
+  - "Dieselpunk"
+  - "Aetheric Fantasy"
+  - "Military Adventure"
+
+sensory_profile: "dieselpunk_foundry"
+
+metaphysics:
+  primary_source: "Atmospheric Aether & Heavy Steam"
+  spiritual_constructs: "Sky-Anchors & Resonant Engines"
+  core_conflict: "Free Sky Guilds vs Iron Spire Combine"
+
+calendar:
+  standard: "Standard Spire Calendar (SSC)"
+  epoch_name: "The Great Ascent"
+  epoch_year_ao: 412
+  eras:
+    era_1:
+      name: "Era of the Keels"
+      span: "300 - 412 SSC"
+      description: "First cloud-skiffs launched from the rim."
+
+series_catalog:
+  - id: "skies-of-iron"
+    title: "Skies of Iron"
+    path: "manuscript/skies-of-iron"
+    status: "in-progress"
+    protagonists:
+      - "Lyra Valen"
+      - "Captain Orlov"
+
+reading_order_recommended:
+  - "skies-of-iron/book-01"

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OKF Universe Manifest Schema (Level 2)",
+  "type": "object",
+  "required": ["universe_id", "display_name", "genre"],
+  "properties": {
+    "universe_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_-]+$"
+    },
+    "display_name": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "default": "1.0.0"
+    },
+    "authority": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["in-development", "canonical", "archived", "draft"]
+    },
+    "genre": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "sensory_profile": {
+      "type": "string"
+    },
+    "series_catalog": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "path"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "path": { "type": "string" },
+          "status": { "type": "string" }
+        }
+      }
+    }
+  }
+}

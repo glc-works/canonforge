@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Convergence Crafting Recipe Schema (OKF v0.3)",
+  "type": "object",
+  "required": ["okf_version", "title", "type", "id", "output_item", "output_quantity", "required_station", "ingredients"],
+  "properties": {
+    "okf_version": {
+      "type": "string",
+      "enum": ["0.3"]
+    },
+    "title": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["Recipe Entity"]
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^rec_[a-z0-9_]+$"
+    },
+    "category": {
+      "type": "string",
+      "enum": ["weapon", "armor", "sacred_gear", "consumable", "ammunition"]
+    },
+    "required_station": {
+      "type": "string",
+      "enum": ["Forge / Anvil", "Machining Workbench", "Resonance Altar", "Lumber Mill / Carpentry", "Field Crafting"]
+    },
+    "crafting_time_seconds": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "output_item": {
+      "type": "string",
+      "description": "Item or Equipment ID produced by this recipe"
+    },
+    "output_quantity": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "ingredients": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["item_id", "quantity"],
+        "properties": {
+          "item_id": { "type": "string" },
+          "quantity": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "labels": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

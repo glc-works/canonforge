@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Convergence Skill Entity Schema (OKF v0.3)",
+  "type": "object",
+  "required": ["okf_version", "title", "type", "id", "job_path", "skill_tier", "resource_pool"],
+  "properties": {
+    "okf_version": {
+      "type": "string",
+      "enum": ["0.3"]
+    },
+    "title": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["Skill Entity"]
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^skill_[a-z0-9_]+$"
+    },
+    "job_path": {
+      "type": "string",
+      "enum": [
+        "Warrior", "Ranger", "Summoner", "Artisan", "Inquisitor",
+        "Sentinel", "Deadeye", "Reaper", "Bulwark", "Mystic",
+        "Universal", "Colossus"
+      ]
+    },
+    "skill_tier": {
+      "type": "string",
+      "enum": ["C", "S", "E"],
+      "description": "C = Core (common/trade), S = Specialized (sub-job), E = Elite (mastery/legend)"
+    },
+    "skill_type": {
+      "type": "string",
+      "enum": ["Strike", "Shot", "Force", "Construct", "Passive", "Stance", "Buff", "Debuff"]
+    },
+    "resource_pool": {
+      "type": "string",
+      "enum": ["SP", "FP", "Heat"],
+      "description": "SP = Stamina Points (universal), FP = Force Points (spirit), Heat = Overheat threshold (Korvath)"
+    },
+    "resource_cost": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "target": {
+      "type": "string",
+      "enum": ["self", "single_enemy", "single_ally", "all_enemies", "all_allies", "area_cone", "area_circle"]
+    },
+    "primary_effect": {
+      "type": "string"
+    },
+    "effect_magnitude": {
+      "type": "number"
+    },
+    "resonance_capable": {
+      "type": "boolean"
+    },
+    "polarity_affinity": {
+      "type": "string",
+      "enum": ["Light", "Dark", "Neutral"]
+    },
+    "legal_races": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["Aurei", "Valen", "Korvath"]
+      }
+    },
+    "labels": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

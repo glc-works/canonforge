@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Convergence Item Entity Schema (OKF v0.3)",
+  "type": "object",
+  "required": ["okf_version", "title", "type", "id", "item_kind", "rarity"],
+  "properties": {
+    "okf_version": {
+      "type": "string",
+      "enum": ["0.3"]
+    },
+    "title": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["Item Entity"]
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^item_[a-z0-9_]+$"
+    },
+    "item_kind": {
+      "type": "string",
+      "enum": ["material", "catalyst", "salvage", "currency", "relic_core", "consumable"]
+    },
+    "rarity": {
+      "type": "string",
+      "enum": ["Common", "Uncommon", "Rare", "Epic", "Legendary"]
+    },
+    "terrestrial_element": {
+      "type": "string",
+      "enum": ["Fire", "Wind", "Water", "Earth", "None"]
+    },
+    "master_polarity": {
+      "type": "string",
+      "enum": ["Light", "Dark", "Neutral"]
+    },
+    "primary_source": {
+      "type": "string"
+    },
+    "unit_value": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "crafting_use": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "labels": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

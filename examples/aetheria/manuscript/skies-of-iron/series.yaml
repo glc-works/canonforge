@@ -1,0 +1,12 @@
+series_id: "skies-of-iron"
+title: "Skies of Iron"
+universe: "aetheria"
+status: "in-progress"
+author: "GLC Works"
+summary: "The opening saga of cloud-skiff runners navigating high-altitude storms and combine gunboats."
+
+books:
+  - book_number: 1
+    directory: "book-01"
+    title: "The Iron Skiff"
+    status: "in-progress"
