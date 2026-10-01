@@ -314,6 +314,7 @@ CANONICAL_LEXEMES: List[SensoryLexeme] = [
     SensoryLexeme("glance", ["sight"], ["glance", "glances", "glancing", "glanced"], pos="verb", thematic_tags=["core"]),
 ]
 
+DICTIONARY_JSON_FILE = DATA_DIR / "sensory_dictionary.json"
 DICTIONARY_YAML_FILE = DATA_DIR / "sensory_dictionary.yaml"
 
 class MasterSensoryDictionary:
@@ -360,7 +361,19 @@ class MasterSensoryDictionary:
         self.phrase_index.clear()
         self.max_phrase_len = 1
 
-        # 1. Load from primary YAML SSOT
+        # 1. High-Performance Pre-compiled JSON Cache (Zero-Dependency & <1ms load)
+        if DICTIONARY_JSON_FILE.is_file():
+            try:
+                data = json.loads(DICTIONARY_JSON_FILE.read_text(encoding="utf-8"))
+                self.themes_registry = data.get("themes_registry", {})
+                for item in data.get("lexemes", []):
+                    lex = SensoryLexeme.from_dict(item)
+                    self.add_lexeme(lex)
+                return
+            except Exception:
+                pass
+
+        # 2. Load from YAML SSOT if JSON is not available
         if DICTIONARY_YAML_FILE.is_file():
             try:
                 import yaml
@@ -370,10 +383,10 @@ class MasterSensoryDictionary:
                     lex = SensoryLexeme.from_dict(item)
                     self.add_lexeme(lex)
                 return
-            except Exception as e:
-                print(f"⚠️ Warning loading sensory_dictionary.yaml: {e}")
+            except Exception:
+                pass
 
-        # Fallback to CANONICAL_LEXEMES
+        # 3. Fallback to CANONICAL_LEXEMES
         for lex in CANONICAL_LEXEMES:
             self.add_lexeme(lex)
 

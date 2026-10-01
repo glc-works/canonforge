@@ -1,0 +1,34 @@
+# CanonForge Developer & Contributor Environment Configuration
+# Managed by mise (https://mise.jdx.dev)
+
+[tools]
+python = "3.12"
+uv = "latest"
+
+[env]
+PYTHONUNBUFFERED = "1"
+PYTHONDONTWRITEBYTECODE = "1"
+
+[tasks.test]
+description = "Run standard library unit test suite"
+run = "uv run python3 -m unittest discover tests"
+
+[tasks.verify]
+description = "Verify the starter reference universe (Aetheria: Skies of Iron)"
+run = "uv run python3 -m canonforge.cli verify aetheria"
+
+[tasks.sensory]
+description = "Run 5-Senses Radar on Chapter 1 of starter universe"
+run = "uv run python3 -m canonforge.cli sensory examples/aetheria/manuscript/skies-of-iron/book-01/chapters/ch01-the-iron-skiff.md"
+
+[tasks.pov]
+description = "Run Deep POV & Head-Hopping audit on Chapter 1"
+run = "uv run python3 -m canonforge.cli pov examples/aetheria/manuscript/skies-of-iron/book-01/chapters/ch01-the-iron-skiff.md"
+
+[tasks.prose]
+description = "Run Anti-Slop, filter-word, and cadence linter on Chapter 1"
+run = "uv run python3 -m canonforge.cli prose examples/aetheria/manuscript/skies-of-iron/book-01/chapters/ch01-the-iron-skiff.md"
+
+[tasks.build]
+description = "Build distribution wheel and sdist with uv"
+run = "uv build"
