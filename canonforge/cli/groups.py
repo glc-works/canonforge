@@ -12,6 +12,7 @@ from typing import Dict, List, Tuple
 # Capability groupings for CanonForge
 CAPABILITY_GROUPS: Dict[str, List[Tuple[str, str]]] = {
     "PROJECT": [
+        ("studio", "Universal interactive developer TUI dashboard (alias: interactive)"),
         ("list", "List all registered universes in workspace"),
         ("stats", "Display prose word count and volume statistics"),
         ("verify", "Run verification suite across universe(s)"),

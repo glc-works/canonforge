@@ -34,7 +34,7 @@ def _get_all_valid_commands() -> list:
         for cmd_name, _ in group_cmds:
             cmds.append(cmd_name)
     # Add common aliases
-    cmds.extend(["scaffold", "polish", "obsidian"])
+    cmds.extend(["scaffold", "polish", "obsidian", "studio", "interactive"])
     return sorted(list(set(cmds)))
 
 def build_parser() -> argparse.ArgumentParser:
@@ -239,12 +239,20 @@ def main():
         appearances.main()
         return
 
+    # Universal Interactive Studio TUI
+    if first_arg in ("studio", "interactive"):
+        from canonforge.engines import interactive
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        interactive.main()
+        return
+
     # Authoring & Worldbuilding subcommands forwarded directly to universe_cli
     universe_forward_cmds = {
         "sensory", "pov", "prose", "thesaurus", "prep",
         "dialogue", "continuity", "timeline", "secrets",
         "lore", "relations", "db", "combat", "travel",
-        "compile", "profile", "canvas", "appearances"
+        "compile", "profile", "canvas", "appearances",
+        "studio", "interactive"
     }
     if first_arg in universe_forward_cmds:
         from canonforge import universe_cli

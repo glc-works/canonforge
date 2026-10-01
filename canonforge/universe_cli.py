@@ -26,66 +26,8 @@ def find_universe_root(start_dir: Optional[Path] = None) -> Path:
             return parent
     return curr
 
-def verify_universe(universe_dir: Path) -> bool:
-    """Run all critical verification gates on a universe directory."""
-    u_dir = universe_dir.resolve()
-    print("=" * 70)
-    print(f"OKF STUDIO: VERIFYING UNIVERSE '{u_dir.name}'")
-    print("=" * 70)
+from canonforge.engines.verifier import verify_universe
 
-    # 1. Manifest existence
-    u_manifest = u_dir / "universe.yaml"
-    if not u_manifest.is_file():
-        print(f"❌ Missing universe.yaml in {u_dir}")
-        return False
-    print("  ✓ Level 2: universe.yaml manifest verified")
-
-    # 2. Schema Validation Gate
-    chapters = list(u_dir.glob("manuscript/*/*/chapters/*.md"))
-    if not chapters:
-        print("  ⚠️ No chapter files found under manuscript/")
-        return True
-
-    print(f"  ✓ Found {len(chapters)} chapter files across manuscript/")
-
-    # 3. Two-Way TOC Integrity Gate
-    toc_files = list(u_dir.glob("manuscript/*/*/toc.yaml"))
-    print(f"  ✓ Level 4: {len(toc_files)} TOC manifests verified")
-
-    # 4. Sensory Audit on first chapter
-    try:
-        from canonforge.engines import sensory
-        sample_ch = chapters[0]
-        text = sample_ch.read_text(encoding="utf-8")
-        res = sensory.analyze_text(text)
-        print(f"  ✓ 5-Senses Radar: '{sample_ch.name}' scored {res['immersion_score']}/100 (Pass: {res['four_sense_compliance_pct']}%)")
-    except Exception as e:
-        print(f"  ⚠️ Sensory check warning: {e}")
-
-    # 5. Deep POV Audit on first chapter
-    try:
-        from canonforge.engines import pov
-        sample_ch = chapters[0]
-        pov_res = pov.audit_chapter_pov(sample_ch)
-        print(f"  ✓ Deep POV Gate: '{sample_ch.name}' POV compliance verified")
-    except Exception as e:
-        print(f"  ⚠️ POV check warning: {e}")
-
-    # 6. Sensory Graph Validation
-    try:
-        from canonforge.engines import sensory_dictionary
-        d = sensory_dictionary.get_dictionary()
-        val = d.validate_graph_integrity()
-        if val["valid"]:
-            print(f"  ✓ Sensory Knowledge Graph: 100% integrity ({val['total_syn_links']} syns, {val['total_ant_links']} ants)")
-        else:
-            print(f"  ⚠️ Sensory graph has missing targets: {len(val['missing_synonyms'])}")
-    except Exception as e:
-        print(f"  ⚠️ Sensory graph check warning: {e}")
-
-    print("=" * 70)
-    print(f"✅ UNIVERSE '{u_dir.name}' PASSED ALL INTEGRITY GATES!\n")
-    return True
 
 def main():
     import json
@@ -126,16 +68,21 @@ def main():
     p_thes.add_argument("--format", choices=["text", "json"], default="text", help="Output format (text/json)")
 
     # Additional forwarded subcommands
-    for fwd_cmd in ["prep", "dialogue", "continuity", "timeline", "secrets", "relations", "db", "lore", "combat", "travel", "compile", "export", "profile", "canvas", "appearances"]:
+    for fwd_cmd in ["studio", "interactive", "prep", "dialogue", "continuity", "timeline", "secrets", "relations", "db", "lore", "combat", "travel", "compile", "export", "profile", "canvas", "appearances"]:
         subparsers.add_parser(fwd_cmd)
-
 
     args, unknown = parser.parse_known_args()
     u_root = find_universe_root()
 
-    if not args.subcommand or args.subcommand == "verify":
-        verify_universe(u_root)
+    if not args.subcommand or args.subcommand in ("studio", "interactive"):
+        from canonforge.engines import interactive
+        interactive.run_interactive_studio(u_root)
         return
+
+    if args.subcommand == "verify":
+        passed = verify_universe(u_root)
+        sys.exit(0 if passed else 1)
+
 
     def _resolve_chapter(ch_arg: str) -> Optional[Path]:
         ch_files = list(u_root.glob(f"**/*{ch_arg}*")) if ch_arg else list(u_root.glob("manuscript/*/*/chapters/*.md"))

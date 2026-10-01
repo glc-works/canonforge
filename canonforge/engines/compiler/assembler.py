@@ -128,13 +128,14 @@ def load_from_manifest(book_dir: Path) -> Optional[Dict[str, Any]]:
         ch_files = act_info.get("chapters", [])
 
         for ch_file in ch_files:
-            file_path = chapters_dir / ch_file
+            ch_fname = ch_file.get("file") if isinstance(ch_file, dict) else str(ch_file)
+            file_path = chapters_dir / ch_fname
             if not file_path.exists():
                 # Check directly in book_dir for backwards compatibility
-                file_path = book_dir / ch_file
+                file_path = book_dir / ch_fname
             
             if not file_path.exists():
-                print(f"⚠️ Warning: Chapter file not found: {ch_file} in {book_dir}", file=sys.stderr)
+                print(f"⚠️ Warning: Chapter file not found: {ch_fname} in {book_dir}", file=sys.stderr)
                 continue
 
             parsed = parse_scene_file(file_path)
@@ -167,7 +168,12 @@ def compile_manuscript(chapters: List[Dict[str, Any]], manifest: Optional[Dict[s
     """Compile clean combined markdown manuscript with dynamic numbering."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    book_title = manifest.get("title", book_name.replace("-", " ").title()) if manifest else book_name.replace("-", " ").title()
+    book_name_str = book_name if isinstance(book_name, str) else "Untitled Book"
+    book_title = (
+        (manifest.get("title") if manifest else None)
+        or (manifest.get("book", {}).get("title") if manifest and isinstance(manifest.get("book"), dict) else None)
+        or book_name_str.replace("-", " ").title()
+    )
     series_name = manifest.get("series", "Original Saga") if manifest else "Original Saga"
     edition_label = manifest.get("edition", "Studio Authoritative Edition") if manifest else "Studio Authoritative Edition"
 

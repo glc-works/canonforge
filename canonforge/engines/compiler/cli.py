@@ -35,10 +35,17 @@ def process_book(book_target: str, output_override: Optional[str] = None, export
     # Determine canonical export slug from manifest or directory
     export_slug = book_dir.name
     if manifest:
-        export_slug = manifest.get("book_id") or manifest.get("book") or manifest.get("slug")
+        book_meta = manifest.get("book") if isinstance(manifest.get("book"), dict) else {}
+        export_slug = (
+            manifest.get("book_id")
+            or book_meta.get("id")
+            or book_meta.get("slug")
+            or (manifest.get("book") if isinstance(manifest.get("book"), str) else None)
+            or manifest.get("slug")
+        )
         if not export_slug and "title" in manifest:
-            export_slug = re.sub(r"[^a-zA-Z0-9]+", "-", manifest["title"]).strip("-").lower()
-    if not export_slug:
+            export_slug = re.sub(r"[^a-zA-Z0-9]+", "-", str(manifest["title"])).strip("-").lower()
+    if not export_slug or not isinstance(export_slug, str):
         export_slug = f"{book_dir.parent.name}-{book_dir.name}"
 
     out_path = Path(output_override) if output_override else COMPILED_DIR / f"{export_slug}.md"

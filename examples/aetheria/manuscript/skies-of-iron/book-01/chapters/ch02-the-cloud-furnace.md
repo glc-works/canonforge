@@ -1,5 +1,7 @@
 ---
 okf_version: "0.3"
+type: "Chapter Entity"
+book: "book-01"
 chapter: 2
 act: 1
 title: "The Cloud Furnace"

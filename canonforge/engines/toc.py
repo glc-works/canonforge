@@ -90,7 +90,9 @@ def audit_toc_integrity(verbose: bool = False) -> Tuple[int, List[str]]:
             declared_chapters: List[str] = []
             for act in toc_data.get("acts", []):
                 for ch in act.get("chapters", []):
-                    declared_chapters.append(ch)
+                    ch_fname = ch.get("file") if isinstance(ch, dict) else str(ch)
+                    if ch_fname:
+                        declared_chapters.append(ch_fname)
 
             # Check duplicate declarations
             seen: Set[str] = set()
