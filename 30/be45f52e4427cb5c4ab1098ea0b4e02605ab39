@@ -1,0 +1,14 @@
+canonforge/engines/consistency.py
+  h_fcacc84ac57fba 412,414
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "30be45f52e4427cb5c4ab1098ea0b4e02605ab39",
+  "prompts": {},
+  "humans": {
+    "h_fcacc84ac57fba": {
+      "author": "Cid <308343041+convergenceID@users.noreply.github.com>"
+    }
+  }
+}
