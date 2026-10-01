@@ -40,6 +40,12 @@ def find_chapter_target(
     allow_interactive: bool = True
 ) -> Optional[Path]:
     """Find target chapter markdown file by exact path, book+chapter, or filename query."""
+    if query:
+        from canonforge.core.resolver import resolve_chapter
+        resolved = resolve_chapter(query, book_filter=book_filter)
+        if resolved:
+            return resolved
+
     if HAS_BN:
         # Check if query is a book or book_filter is provided
         target_1 = book_filter or query

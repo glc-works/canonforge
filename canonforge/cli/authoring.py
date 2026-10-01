@@ -15,24 +15,12 @@ from pathlib import Path
 from typing import Optional
 
 from canonforge.core.manifest import find_universe_root
+from canonforge.core.resolver import resolve_chapter
 
 
 def resolve_chapter_file(target_arg: Optional[str] = None, universe_dir: Optional[Path] = None) -> Optional[Path]:
     """Resolve a target chapter path from argument or active universe."""
-    u_root = universe_dir or find_universe_root()
-    if target_arg:
-        p = Path(target_arg)
-        if p.is_file():
-            return p
-        matches = list(u_root.glob(f"**/*{target_arg}*"))
-        valid = [f for f in matches if f.is_file() and f.suffix == ".md" and not f.name.startswith(".")]
-        if valid:
-            return valid[0]
-
-    # Default to first chapter or active draft
-    candidates = list(u_root.glob("manuscript/*/*/chapters/*.md")) or list(u_root.glob("manuscript/*/*.md"))
-    valid_candidates = [f for f in candidates if f.is_file() and not f.name.startswith(".")]
-    return valid_candidates[0] if valid_candidates else None
+    return resolve_chapter(target_arg, universe_dir=universe_dir)
 
 
 def cmd_thesaurus(args):

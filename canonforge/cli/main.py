@@ -153,13 +153,16 @@ def build_parser() -> argparse.ArgumentParser:
 
     # 2. AUDITING
     p_audit = subparsers.add_parser("audit", help="Run multi-engine diagnostic audit")
-    p_audit.add_argument("chapter", nargs="?", default="", help="Optional chapter markdown file")
+    p_audit.add_argument("chapter", nargs="?", default="", help="Optional chapter markdown file or shorthand (e.g. '2.1', 'salt-trunk')")
     p_audit.add_argument("--book", "-b", help="Audit all chapters in specified book")
+    p_audit.add_argument("--all", "-a", action="store_true", help="Audit all chapters across all books")
+    p_audit.add_argument("--export", "-e", help="Export audit report to file")
     p_audit.add_argument("--format", choices=["text", "json"], default="text", help="Output format")
     p_audit.set_defaults(func=cmd_audit)
 
     p_review = subparsers.add_parser("review", help="Generate literary scorecard (/10)")
-    p_review.add_argument("chapter", nargs="?", default="", help="Target chapter markdown file")
+    p_review.add_argument("chapter", nargs="?", default="", help="Target chapter markdown file or shorthand (e.g. '2.1')")
+    p_review.add_argument("--export", "-e", help="Export scorecard to markdown file")
     p_review.add_argument("--format", choices=["text", "json"], default="text", help="Output format")
     p_review.set_defaults(func=cmd_review)
 

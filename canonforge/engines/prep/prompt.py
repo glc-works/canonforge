@@ -1,3 +1,5 @@
+import re
+from pathlib import Path
 from typing import Dict, Any
 from canonforge.engines.prep.builder import generate_scene_brief
 
@@ -140,6 +142,49 @@ def generate_llm_authoring_prompt(brief: Dict[str, Any]) -> str:
 
 build_scene_brief = generate_scene_brief
 format_scene_prompt = generate_llm_authoring_prompt
+
+
+def inject_scene_brief(brief: Dict[str, Any]) -> bool:
+    """Inject or refresh a compact authoring context card as an HTML comment in chapter markdown."""
+    fpath = Path(brief.get("file_path", ""))
+    if not fpath.is_file():
+        return False
+
+    raw = fpath.read_text(encoding="utf-8")
+    pal = brief.get("sensory_palette", {})
+    
+    lines = [
+        "<!-- CANONFORGE SCENE BRIEF",
+        f"Chapter: {brief.get('title', fpath.name)} | POV: {brief.get('pov', 'Unknown')}",
+        f"Setting: {brief.get('setting', 'Unspecified')} | Timeline: {brief.get('timeline_anchor', 'Standard')}",
+        "Sensory Palette:",
+        f"  • Smell : {', '.join(pal.get('smells', [])) or 'None'}",
+        f"  • Sound : {', '.join(pal.get('sounds', [])) or 'None'}",
+        f"  • Touch : {', '.join(pal.get('textures', [])) or 'None'}",
+        f"  • Atmosphere: {pal.get('atmosphere', 'Grounded')}",
+        "Active Conflicts & Micro-Beats:",
+        "  1. Tactile Entrance (0-20%): Establish physical labor and atmospheric temperature",
+        "  2. Dialogue Subtext (20-60%): High stakes, hidden agendas, unspoken secrets",
+        "  3. Mechanical Pivot (60-85%): Irreversible plot choice or physical action",
+        "  4. Climax / Hearth  (85-100%): Emotional landing or dread cliffhanger",
+        "-->\n"
+    ]
+    brief_block = "\n".join(lines)
+
+    # Clean existing brief if present
+    cleaned = re.sub(r"<!-- CANONFORGE SCENE BRIEF[\s\S]*?-->\n*", "", raw)
+
+    if cleaned.startswith("---"):
+        parts = cleaned.split("---", 2)
+        if len(parts) >= 3:
+            new_content = f"---{parts[1]}---\n\n{brief_block}\n{parts[2].lstrip()}"
+        else:
+            new_content = f"{brief_block}\n{cleaned}"
+    else:
+        new_content = f"{brief_block}\n{cleaned}"
+
+    fpath.write_text(new_content, encoding="utf-8")
+    return True
 
 
 # ==============================================================================
