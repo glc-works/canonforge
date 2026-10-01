@@ -1,0 +1,40 @@
+canonforge/__init__.py
+  h_fcacc84ac57fba 8
+canonforge/cli/groups.py
+  h_fcacc84ac57fba 15
+canonforge/cli/main.py
+  h_fcacc84ac57fba 37,242-248,254-255
+canonforge/engines/compiler/assembler.py
+  h_fcacc84ac57fba 131-132,135,138,171-176
+canonforge/engines/compiler/cli.py
+  h_fcacc84ac57fba 38-45,47-48
+canonforge/engines/interactive.py
+  h_fcacc84ac57fba 1-372
+canonforge/engines/toc.py
+  h_fcacc84ac57fba 93-95
+canonforge/engines/verifier.py
+  h_fcacc84ac57fba 1-199
+canonforge/universe_cli.py
+  h_fcacc84ac57fba 29-30,71,77-79,82-86
+examples/aetheria/manuscript/skies-of-iron/book-01/chapters/ch01-the-iron-skiff.md
+  h_fcacc84ac57fba 3-4
+examples/aetheria/manuscript/skies-of-iron/book-01/chapters/ch02-the-cloud-furnace.md
+  h_fcacc84ac57fba 3-4
+pyproject.toml
+  h_fcacc84ac57fba 7
+tests/test_interactive_studio.py
+  h_fcacc84ac57fba 1-105
+uv.lock
+  h_fcacc84ac57fba 115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "fb3af0b52d3a755e876b25c8b0c1eaed832af23b",
+  "prompts": {},
+  "humans": {
+    "h_fcacc84ac57fba": {
+      "author": "Cid <308343041+convergenceID@users.noreply.github.com>"
+    }
+  }
+}
