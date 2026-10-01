@@ -218,12 +218,26 @@ def main():
         exp_cli.main()
         return
 
+    # Character Intelligence Dossier & Profiler
+    if first_arg == "profile":
+        from canonforge.engines import profile
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        profile.main()
+        return
+
+    # Visual Obsidian Canvas Generator
+    if first_arg == "canvas":
+        from canonforge.engines import canvas
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        canvas.main()
+        return
+
     # Authoring & Worldbuilding subcommands forwarded directly to universe_cli
     universe_forward_cmds = {
         "sensory", "pov", "prose", "thesaurus", "prep",
         "dialogue", "continuity", "timeline", "secrets",
         "lore", "relations", "db", "combat", "travel",
-        "compile"
+        "compile", "profile", "canvas"
     }
     if first_arg in universe_forward_cmds:
         from canonforge import universe_cli

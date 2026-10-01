@@ -35,6 +35,8 @@ CAPABILITY_GROUPS: Dict[str, List[Tuple[str, str]]] = {
         ("secrets", "Information disclosure and dramatic irony tracking gate"),
     ],
     "WORLDBUILDING": [
+        ("profile", "Character intelligence dossier (lore, RPG stats, invariants, social web)"),
+        ("canvas", "Generate multi-swimlane visual Obsidian Chronology Canvas"),
         ("scan", "Scan manuscript for unregistered entities & auto-scaffold"),
         ("link", "Automatically link entity mentions in manuscript to wiki"),
         ("search", "Universal search across wiki dossiers and local game database"),

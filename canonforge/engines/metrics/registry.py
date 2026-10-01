@@ -130,10 +130,14 @@ SENSES = {
 # ==============================================================================
 
 
+from canonforge.core.manifest import find_universe_root
+
 def get_canonical_character_registry(universe_dir: Optional[Path] = None) -> Dict[str, List[str]]:
     """Return map of Canonical Name -> list of search terms dynamically from universe lore."""
     registry: Dict[str, Set[str]] = {}
-    u_root = universe_dir or Path.cwd()
+    u_root = universe_dir or find_universe_root()
+
+    HONORIFICS = {"the", "a", "an", "elder", "brother", "mother", "father", "master", "commander", "inquisitor", "abbot", "lady", "lord", "ser", "saint", "first"}
 
     # 1. Check relationships.json if present
     for rel_file in [u_root / "wiki" / "database" / "relationships.json", u_root / "data" / "relationships.json"]:
@@ -146,7 +150,7 @@ def get_canonical_character_registry(universe_dir: Optional[Path] = None) -> Dic
                         if name:
                             first = name.split()[0]
                             registry.setdefault(name, set()).add(name)
-                            if len(first) >= 4 and first not in ("Elder", "Brother", "Mother", "Father", "Master", "Commander", "Inquisitor", "Abbot", "Lady", "Lord"):
+                            if len(first) >= 4 and first.lower() not in HONORIFICS:
                                 registry[name].add(first)
             except Exception:
                 pass
@@ -156,9 +160,19 @@ def get_canonical_character_registry(universe_dir: Optional[Path] = None) -> Dic
         if char_dir.is_dir():
             for cf in char_dir.glob("*.md"):
                 canon_name = cf.stem.replace("-", " ").title()
+                # Check frontmatter title if present
+                try:
+                    txt = cf.read_text(encoding="utf-8", errors="ignore")
+                    m_title = re.search(r'^title:\s*["\']?(.*?)["\']?\s*$', txt, re.MULTILINE)
+                    if m_title:
+                        raw_title = m_title.group(1).replace(",", "").strip()
+                        if raw_title:
+                            canon_name = raw_title
+                except Exception:
+                    pass
                 first = canon_name.split()[0]
                 registry.setdefault(canon_name, set()).add(canon_name)
-                if len(first) >= 3:
+                if len(first) >= 4 and first.lower() not in HONORIFICS:
                     registry[canon_name].add(first)
 
     return {k: sorted(list(v), key=lambda x: len(x), reverse=True) for k, v in registry.items()}
@@ -166,7 +180,7 @@ def get_canonical_character_registry(universe_dir: Optional[Path] = None) -> Dic
 def get_item_registry(universe_dir: Optional[Path] = None) -> Dict[str, List[str]]:
     """Dynamically return map of canonical items from universe lore."""
     registry: Dict[str, List[str]] = {}
-    u_root = universe_dir or Path.cwd()
+    u_root = universe_dir or find_universe_root()
     for item_dir in [u_root / "lore" / "items", u_root / "wiki" / "terms" / "items"]:
         if item_dir.is_dir():
             for itm in item_dir.glob("*.md"):

@@ -126,7 +126,7 @@ def main():
     p_thes.add_argument("--format", choices=["text", "json"], default="text", help="Output format (text/json)")
 
     # Additional forwarded subcommands
-    for fwd_cmd in ["prep", "dialogue", "continuity", "timeline", "secrets", "relations", "db", "lore", "combat", "travel", "compile", "export"]:
+    for fwd_cmd in ["prep", "dialogue", "continuity", "timeline", "secrets", "relations", "db", "lore", "combat", "travel", "compile", "export", "profile", "canvas"]:
         subparsers.add_parser(fwd_cmd)
 
 
@@ -300,6 +300,18 @@ def main():
         from canonforge.engines.exporter import cli as exp_cli
         sys.argv = [sys.argv[0], *unknown]
         exp_cli.main()
+        return
+
+    if args.subcommand == "profile":
+        from canonforge.engines import profile
+        sys.argv = [sys.argv[0], *unknown]
+        profile.main()
+        return
+
+    if args.subcommand == "canvas":
+        from canonforge.engines import canvas
+        sys.argv = [sys.argv[0], *unknown]
+        canvas.main()
         return
 
 if __name__ == "__main__":

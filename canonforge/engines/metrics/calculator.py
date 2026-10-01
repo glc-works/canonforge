@@ -3,15 +3,20 @@ Detailed prose metrics and readability calculation.
 """
 import re
 import json
+import time
 import hashlib
 from pathlib import Path
 from typing import Dict, Any
+from collections import Counter
 
+from canonforge.core.manifest import find_universe_root
 from canonforge.engines.metrics.cache import init_metrics_cache
 from canonforge.engines.metrics.registry import (
     get_canonical_character_registry, get_item_registry,
     SENSES, STOPWORDS, ITEM_REGISTRY
 )
+
+UNIVERSE_DIR = find_universe_root()
 
 def compute_metrics(file_path: Path) -> Dict[str, Any]:
     """Perform fast, single-pass text analysis on a markdown chapter file."""
@@ -103,7 +108,7 @@ def compute_metrics(file_path: Path) -> Dict[str, Any]:
     immersion_score = min(100.0, round((four_sense_pass_pct * 0.6) + (min(40.0, sensory_density_pct * 8.0)), 1))
 
     # Detect book slug
-    rel_path = file_path.relative_to(CONVERGENCE_DIR) if file_path.is_relative_to(CONVERGENCE_DIR) else file_path
+    rel_path = file_path.relative_to(UNIVERSE_DIR) if file_path.is_relative_to(UNIVERSE_DIR) else file_path
     book_slug = "standalone"
     for part in rel_path.parts:
         if part.startswith("book-") or part.startswith("the-"):

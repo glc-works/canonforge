@@ -19,10 +19,14 @@ except ImportError:
     HAS_CP = False
 
 try:
-    import book_navigator as bn
+    from canonforge.engines import navigator as bn
     HAS_BN = True
 except ImportError:
-    HAS_BN = False
+    try:
+        import book_navigator as bn
+        HAS_BN = True
+    except ImportError:
+        HAS_BN = False
 
 
 # ==============================================================================
@@ -73,7 +77,7 @@ def find_chapter_target(
     # Substring / stem match across manuscript
     q_clean = query.lower().replace(".md", "").strip()
     all_chaps = list(MANUSCRIPT_DIR.rglob("*.md"))
-    valid = [f for f in all_chaps if "chapters" in str(f) and not f.name.startswith("compiled") and not f.name.startswith(".")]
+    valid = [f for f in all_chaps if not f.name.startswith(("compiled", ".", "_")) and not any(p.startswith((".", "_", "compiled", "darlings", "exports")) for p in f.parts)]
     
     # 1. Exact match on stem or filename
     exact = [f for f in valid if f.stem.lower() == q_clean or f.name.lower() == q_clean]
@@ -84,18 +88,28 @@ def find_chapter_target(
                 return b_exact[0]
         return exact[0]
 
-    # 2. Number prefix match (e.g. "ch09" -> ch09-*.md)
+    # 2. Number prefix match or frontmatter chapter number (e.g. "ch01" -> ch01-*.md or chapter: 1)
     m = re.search(r"\b(?:ch)?(\d+)\b", q_clean)
     if m:
         num = int(m.group(1))
         prefix = f"ch{num:02d}-"
-        num_matches = [f for f in valid if f.name.startswith(prefix)]
+        num_matches = [f for f in valid if f.name.startswith(prefix) or f.name.startswith(f"ch{num}-")]
         if num_matches:
             if book_filter:
                 b_num = [f for f in num_matches if book_filter.lower() in str(f).lower()]
                 if b_num:
                     return b_num[0]
             return num_matches[0]
+        # Check frontmatter chapter: <num>
+        for f in valid:
+            try:
+                fm = parse_frontmatter(f.read_text(encoding="utf-8"))
+                if fm.get("chapter") == num:
+                    if book_filter and book_filter.lower() not in str(f).lower():
+                        continue
+                    return f
+            except Exception:
+                pass
 
     # 3. Substring match
     sub = [f for f in valid if q_clean in f.stem.lower()]

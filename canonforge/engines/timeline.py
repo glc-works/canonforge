@@ -212,7 +212,31 @@ def main():
     parser = argparse.ArgumentParser(description="CanonForge Chronology & Travel Physics Gate")
     parser.add_argument("--book", help="Specific book directory to audit")
     parser.add_argument("--all", action="store_true", help="Audit all books across manuscript")
+    parser.add_argument("--year", "-y", type=int, help="Query world state, active cast, and events for calendar year")
+    parser.add_argument("--character", "-c", type=str, help="Query lifespan status across key epochs for a character")
+    parser.add_argument("--json", action="store_true", help="Output raw JSON data for query")
     args = parser.parse_args()
+
+    # Delegate to timeline_query if querying by year or character
+    if args.year is not None or args.character:
+        from canonforge.engines import timeline_query
+        timeline, chars = timeline_query.load_universe_chronology(UNIVERSE_DIR)
+        if args.character:
+            res = timeline_query.query_character(args.character, timeline, chars)
+            if not res:
+                print(f"❌ Character '{args.character}' not found in canonical records.")
+                sys.exit(1)
+            if args.json:
+                print(json.dumps(res, indent=2))
+            else:
+                timeline_query.print_character_report(res)
+        else:
+            res = timeline_query.query_year(args.year, timeline, chars)
+            if args.json:
+                print(json.dumps(res, indent=2))
+            else:
+                timeline_query.print_year_report(res)
+        return
 
     network = RouteNetwork()
 

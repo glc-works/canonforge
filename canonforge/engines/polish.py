@@ -25,42 +25,18 @@ from canonforge.core.manifest import find_universe_root
 UNIVERSE_DIR = find_universe_root()
 MANUSCRIPT_DIR = UNIVERSE_DIR / "manuscript"
 
-# Import existing engines
-try:
-    import chapter_metrics as cm
-    HAS_CM = True
-except ImportError:
-    HAS_CM = False
-
-try:
-    import audit_prose as ap
-    HAS_AP = True
-except ImportError:
-    HAS_AP = False
-
-try:
-    import audit_sensory as asen
-    HAS_ASEN = True
-except ImportError:
-    HAS_ASEN = False
-
-try:
-    import audit_continuity as ac
-    HAS_AC = True
-except ImportError:
-    HAS_AC = False
-
-try:
-    import novel_pipeline as np
-    HAS_NP = True
-except ImportError:
-    HAS_NP = False
-
-try:
-    import book_navigator as bn
-    HAS_BN = True
-except ImportError:
-    HAS_BN = False
+# Import engines
+try: from canonforge.engines import metrics as cm; HAS_CM = True
+except ImportError: HAS_CM = False
+try: from canonforge.engines import prose as ap; HAS_AP = True
+except ImportError: HAS_AP = False
+try: from canonforge.engines import sensory as asen; HAS_ASEN = True
+except ImportError: HAS_ASEN = False
+try: from canonforge.engines import continuity as ac; HAS_AC = True
+except ImportError: HAS_AC = False
+try: from canonforge.engines import navigator as bn; HAS_BN = True
+except ImportError: HAS_BN = False
+HAS_NP = False
 # ==============================================================================
 # RESOLVER
 # ==============================================================================
@@ -128,9 +104,16 @@ def resolve_draft_file(
     if m:
         num = int(m.group(1))
         prefix = f"ch{num:02d}-"
-        num_m = [f for f in valid if f.name.startswith(prefix)]
+        num_m = [f for f in valid if f.name.startswith(prefix) or f.name.startswith(f"ch{num}-")]
         if num_m:
             return num_m[0]
+        for f in valid:
+            try:
+                fm_m = re.search(r"^---\s*\n(.*?)\n---", f.read_text(encoding="utf-8"), re.DOTALL)
+                if fm_m and re.search(r"^chapter:\s*" + str(num) + r"\b", fm_m.group(1), re.MULTILINE):
+                    return f
+            except Exception:
+                pass
             
     sub = [f for f in valid if q_clean in f.stem.lower()]
     if sub:

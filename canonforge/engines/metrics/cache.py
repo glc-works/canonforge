@@ -4,9 +4,11 @@ SQLite metrics cache for sub-millisecond repeated queries.
 import sqlite3
 from pathlib import Path
 
-PACKAGE_ROOT = Path(__file__).resolve().parent.parent.parent
-DATA_DIR = PACKAGE_ROOT / "data"
-CACHE_DB_PATH = DATA_DIR / "metrics_cache.db"
+from canonforge.core.manifest import find_universe_root
+
+UNIVERSE_DIR = find_universe_root()
+DATA_DIR = UNIVERSE_DIR / "data"
+DB_PATH = DATA_DIR / "metrics_cache.db"
 
 def init_metrics_cache() -> sqlite3.Connection:
     """Initialize SQLite table for caching chapter metrics."""
