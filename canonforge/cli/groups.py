@@ -49,6 +49,7 @@ CAPABILITY_GROUPS: Dict[str, List[Tuple[str, str]]] = {
         ("db", "Game world database sync and SQL schema generator"),
         ("combat", "Tactical combat telemetry and battle mechanics evaluator"),
         ("travel", "Expedition logistics and spatial route planner"),
+        ("rename", "Refactor and rename characters across all books, wikilinks, and dossiers"),
     ],
     "PUBLISHING": [
         ("compile", "Compile manuscript chapters into consolidated book volume"),

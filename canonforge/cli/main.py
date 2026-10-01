@@ -144,10 +144,42 @@ def build_parser() -> argparse.ArgumentParser:
     p_audit.add_argument("--format", choices=["text", "json"], default="text", help="Output format")
     p_audit.set_defaults(func=cmd_audit)
 
-    p_review = subparsers.add_parser("review", aliases=["polish"], help="Generate literary scorecard (/10)")
+    p_review = subparsers.add_parser("review", help="Generate literary scorecard (/10)")
     p_review.add_argument("chapter", nargs="?", default="", help="Target chapter markdown file")
     p_review.add_argument("--format", choices=["text", "json"], default="text", help="Output format")
     p_review.set_defaults(func=cmd_review)
+
+    # Authoring & Linguistic Quality
+    from canonforge.cli.authoring import cmd_thesaurus, cmd_sensory, cmd_pov, cmd_prose, cmd_polish
+
+    p_thes = subparsers.add_parser("thesaurus", help="Query Sensory Knowledge Graph thesaurus")
+    p_thes.add_argument("word", nargs="?", default="", help="Target sensory word or phrase")
+    p_thes.add_argument("--theme", help="Filter by theme")
+    p_thes.add_argument("--intensity", type=int, choices=[1, 2, 3], help="Filter by intensity (1-3)")
+    p_thes.add_argument("--format", choices=["text", "json"], default="text", help="Output format")
+    p_thes.set_defaults(func=cmd_thesaurus)
+
+    p_sen = subparsers.add_parser("sensory", help="Run 5-senses radar audit")
+    p_sen.add_argument("chapter", nargs="?", default="", help="Target chapter markdown file")
+    p_sen.add_argument("--show-windows", "-w", action="store_true", help="Show all 500-word windows")
+    p_sen.add_argument("--format", choices=["text", "json"], default="text", help="Output format")
+    p_sen.set_defaults(func=cmd_sensory)
+
+    p_pov = subparsers.add_parser("pov", help="Run Deep 3rd Limited POV audit")
+    p_pov.add_argument("chapter", nargs="?", default="", help="Target chapter markdown file")
+    p_pov.add_argument("--format", choices=["text", "json"], default="text", help="Output format")
+    p_pov.set_defaults(func=cmd_pov)
+
+    p_prose = subparsers.add_parser("prose", help="Run anti-slop and filter word linter")
+    p_prose.add_argument("chapter", nargs="?", default="", help="Target chapter markdown file")
+    p_prose.add_argument("--verbose", "-v", action="store_true", help="Show all hits")
+    p_prose.add_argument("--format", choices=["text", "json"], default="text", help="Output format")
+    p_prose.set_defaults(func=cmd_prose)
+
+    p_pol = subparsers.add_parser("polish", help="Run single-pass unified literary reviewer")
+    p_pol.add_argument("chapter", nargs="?", default="", help="Target chapter markdown file")
+    p_pol.add_argument("--format", choices=["text", "json"], default="text", help="Output format")
+    p_pol.set_defaults(func=cmd_polish)
 
     # Narrative Impact Analyzer
     p_impact = subparsers.add_parser("impact", help="Analyze narrative blast radius and plot causality across all books")
@@ -184,6 +216,12 @@ def main():
     # If --help or -h passed at root: show grouped capability explorer
     if len(sys.argv) == 2 and sys.argv[1] in ("-h", "--help"):
         print_grouped_help()
+        return
+
+    # If --version or -V passed at root: show version
+    if len(sys.argv) == 2 and sys.argv[1] in ("-V", "--version"):
+        from canonforge import __version__
+        print(f"canonforge {__version__}")
         return
 
     first_arg = sys.argv[1]
@@ -279,17 +317,78 @@ def main():
         impact.main()
         return
 
-    # Authoring & Worldbuilding subcommands forwarded directly to universe_cli
-    universe_forward_cmds = {
-        "sensory", "pov", "prose", "thesaurus", "prep",
-        "dialogue", "continuity", "timeline", "secrets",
-        "lore", "relations", "db", "combat", "travel",
-        "compile", "profile", "canvas", "appearances",
-        "studio", "interactive", "impact"
-    }
-    if first_arg in universe_forward_cmds:
-        from canonforge import universe_cli
-        universe_cli.main()
+    # Global Rename command
+    if first_arg == "rename":
+        from canonforge.engines import rename
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        rename.main()
+        return
+
+    # Direct engine delegations
+    if first_arg == "combat":
+        from canonforge.engines.combat import cli as combat_cli
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        combat_cli.main()
+        return
+
+    if first_arg == "travel":
+        from canonforge.engines import travel
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        travel.main()
+        return
+
+    if first_arg == "prep":
+        from canonforge.engines.prep import cli as prep_cli
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        prep_cli.main()
+        return
+
+    if first_arg in ("dialogue", "play"):
+        from canonforge.engines import dialogue
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        dialogue.main()
+        return
+
+    if first_arg == "continuity":
+        from canonforge.engines import continuity
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        continuity.main()
+        return
+
+    if first_arg == "timeline":
+        from canonforge.engines import timeline
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        timeline.main()
+        return
+
+    if first_arg == "secrets":
+        from canonforge.engines import secrets
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        secrets.main()
+        return
+
+    if first_arg == "relations":
+        from canonforge.engines.relations import cli as rel_cli
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        rel_cli.main()
+        return
+
+    if first_arg in ("db", "lore"):
+        from canonforge.engines import sync_db
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        sync_db.main()
+        return
+
+    if first_arg == "compile":
+        from canonforge.engines.compiler import cli as comp_cli
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        comp_cli.main()
+        return
+
+    if first_arg == "metrics":
+        from canonforge.engines.metrics import cli as metrics_cli
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        metrics_cli.main()
         return
 
     # Check for unknown command typo

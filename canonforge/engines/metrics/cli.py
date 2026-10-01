@@ -5,9 +5,7 @@ import sys
 import argparse
 from pathlib import Path
 
-PACKAGE_ROOT = Path(__file__).resolve().parent.parent.parent
-MANUSCRIPT_DIR = PACKAGE_ROOT / "manuscript"
-
+from canonforge.core.manifest import find_universe_root
 from canonforge.engines.metrics.cache import clear_metrics_cache
 from canonforge.engines.metrics.calculator import get_chapter_metrics
 from canonforge.engines.metrics.reporter import (
@@ -25,28 +23,30 @@ def main():
     
     args = parser.parse_args()
     
+    ms_dir = find_universe_root() / "manuscript"
+
     if args.clear_cache:
         clear_metrics_cache()
         return
 
     if args.all:
         md_files = [
-            f for f in MANUSCRIPT_DIR.rglob("*.md")
+            f for f in ms_dir.rglob("*.md")
             if not f.name.startswith((".", "MASTER-", "README")) and "_build" not in f.parts and "compiled" not in f.parts and "exports" not in f.parts and "darlings" not in f.parts
         ]
-        print_book_summary("All Saga Books (Full Saga)", md_files)
+        print_book_summary("All Manuscript Books", md_files)
         return
 
     if args.book:
-        target_dir = MANUSCRIPT_DIR / args.book
+        target_dir = ms_dir / args.book
         if not target_dir.exists():
-            candidates = list(MANUSCRIPT_DIR.glob(f"*/{args.book}")) + [
-                d for d in MANUSCRIPT_DIR.glob("*/*") if d.is_dir() and args.book in d.name
+            candidates = list(ms_dir.glob(f"*/{args.book}")) + [
+                d for d in ms_dir.glob("*/*") if d.is_dir() and args.book in d.name
             ]
             if candidates:
                 target_dir = candidates[0]
             else:
-                for toc in MANUSCRIPT_DIR.glob("*/*/toc.yaml"):
+                for toc in ms_dir.glob("*/*/toc.yaml"):
                     if args.book.lower() in toc.read_text(encoding="utf-8").lower():
                         target_dir = toc.parent
                         break

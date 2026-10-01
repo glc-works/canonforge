@@ -15,12 +15,7 @@ from pathlib import Path
 from collections import Counter
 from typing import Dict, List, Tuple, Optional, Any, Set
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-CONVERGENCE_DIR = SCRIPT_DIR.parent
-MANUSCRIPT_DIR = CONVERGENCE_DIR / "manuscript"
-WIKI_DIR = CONVERGENCE_DIR / "wiki"
-DATA_DIR = CONVERGENCE_DIR / "data"
-DB_PATH = DATA_DIR / "game_world.db"
+from canonforge.core.manifest import find_universe_root
 
 # ==============================================================================
 # STOPWORDS & CANONICAL REGISTRIES

@@ -5,9 +5,7 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
-PACKAGE_ROOT = Path(__file__).resolve().parent.parent.parent
-MANUSCRIPT_DIR = PACKAGE_ROOT / "manuscript"
-
+from canonforge.core.manifest import find_universe_root
 from canonforge.engines.metrics.calculator import get_chapter_metrics
 
 def print_chapter_dossier(m: Dict[str, Any]):
@@ -150,23 +148,26 @@ def print_book_summary(book_slug: str, files: List[Path]):
 # CLI RUNNER
 # ==============================================================================
 
-def find_target_file(query: str) -> Optional[Path]:
+def find_target_file(query: str, universe_dir: Optional[Path] = None) -> Optional[Path]:
     """Find chapter file by exact path, relative path, or filename search."""
     p = Path(query)
     if p.exists() and p.is_file():
         return p
         
-    p_full = CONVERGENCE_DIR / query
+    u_root = universe_dir or find_universe_root()
+    p_full = u_root / query
     if p_full.exists() and p_full.is_file():
         return p_full
         
     # Search in manuscript directory
-    matches = list(MANUSCRIPT_DIR.rglob(f"*{query}*"))
-    md_matches = [m for m in matches if m.suffix == ".md" and not m.name.startswith(".")]
-    if md_matches:
-        # Prefer exact match or shortest filename
-        md_matches.sort(key=lambda x: len(x.name))
-        return md_matches[0]
+    ms_dir = u_root / "manuscript"
+    if ms_dir.is_dir():
+        matches = list(ms_dir.rglob(f"*{query}*"))
+        md_matches = [m for m in matches if m.suffix == ".md" and not m.name.startswith(".")]
+        if md_matches:
+            # Prefer exact match or shortest filename
+            md_matches.sort(key=lambda x: len(x.name))
+            return md_matches[0]
         
     return None
 

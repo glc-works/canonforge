@@ -5,16 +5,21 @@ import re
 import json
 import sqlite3
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Tuple
+from canonforge.core.manifest import find_universe_root
 
-PACKAGE_ROOT = Path(__file__).resolve().parent.parent.parent
-DATA_DIR = PACKAGE_ROOT / "data"
-DB_PATH = DATA_DIR / "game_world.db"
+def get_db_path() -> Path:
+    u_root = find_universe_root()
+    for cand in [u_root / "data" / "game_world.db", u_root / "db" / "game_world.db", Path.cwd() / "data" / "game_world.db"]:
+        if cand.is_file():
+            return cand
+    return u_root / "data" / "game_world.db"
 
 def get_db_connection() -> sqlite3.Connection:
-    if not DB_PATH.exists():
-        raise FileNotFoundError(f"Game database not found at {DB_PATH}. Run canonforge.engines.init_db first.")
-    conn = sqlite3.connect(DB_PATH)
+    db_file = get_db_path()
+    if not db_file.exists():
+        raise FileNotFoundError(f"Game database not found at {db_file}. Run 'cf db' first.")
+    conn = sqlite3.connect(db_file)
     conn.row_factory = sqlite3.Row
     return conn
 

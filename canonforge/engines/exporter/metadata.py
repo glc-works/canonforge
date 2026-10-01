@@ -4,9 +4,7 @@ Metadata discovery and book resolution.
 import os
 from pathlib import Path
 from typing import Dict, Any, Optional
-
-PACKAGE_ROOT = Path(__file__).resolve().parent.parent.parent
-MANUSCRIPT_DIR = PACKAGE_ROOT / "manuscript"
+from canonforge.core.manifest import find_universe_root
 
 def get_book_metadata(book_path: Path) -> Dict[str, Any]:
     """Dynamically construct book metadata from toc.yaml, series.yaml, and universe.yaml."""
@@ -67,7 +65,7 @@ def resolve_book_dir(book_slug: str, base_dir: Optional[Path] = None) -> Optiona
                 ms_dir = cand / "manuscript"
                 break
         if not ms_dir:
-            ms_dir = MANUSCRIPT_DIR
+            ms_dir = find_universe_root() / "manuscript"
 
     p = ms_dir / book_slug
     if p.exists() and (p / "chapters").exists():
