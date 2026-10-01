@@ -206,7 +206,7 @@ CREATE VIRTUAL TABLE IF NOT EXISTS lore_search_fts USING fts5(
 -- ==============================================================================
 -- CANONICAL RPG VIEWS (COMBAT STAT DERIVATIONS & RELATIONS)
 -- ==============================================================================
-CREATE VIEW v_character_combat_stats AS
+CREATE VIEW IF NOT EXISTS v_character_combat_stats AS
 SELECT
     char_id,
     name,
@@ -234,7 +234,7 @@ SELECT
     (CASE WHEN biological_state LIKE '%Mechanical%' THEN 0 ELSE (force_stat * 2) END) AS base_force_atk
 FROM characters;
 
-CREATE VIEW v_recipe_details AS
+CREATE VIEW IF NOT EXISTS v_recipe_details AS
 SELECT
     r.recipe_id,
     r.name AS recipe_name,
@@ -251,7 +251,7 @@ JOIN recipe_ingredients ri ON r.recipe_id = ri.recipe_id
 LEFT JOIN items i ON ri.item_id = i.item_id
 LEFT JOIN equipment eq ON ri.item_id = eq.equip_id;
 
-CREATE VIEW v_monster_loot AS
+CREATE VIEW IF NOT EXISTS v_monster_loot AS
 SELECT
     m.monster_id,
     m.name AS monster_name,
@@ -266,7 +266,7 @@ FROM monsters m
 JOIN monster_loot_drops d ON m.monster_id = d.monster_id
 LEFT JOIN items i ON d.item_id = i.item_id;
 
-CREATE VIEW v_place_connections AS
+CREATE VIEW IF NOT EXISTS v_place_connections AS
 SELECT
     r.route_id,
     p1.name AS from_place_name,

@@ -126,7 +126,7 @@ def main():
     p_thes.add_argument("--format", choices=["text", "json"], default="text", help="Output format (text/json)")
 
     # Additional forwarded subcommands
-    for fwd_cmd in ["prep", "dialogue", "continuity", "timeline", "secrets", "relations", "db", "lore", "combat", "travel", "compile", "export", "profile", "canvas"]:
+    for fwd_cmd in ["prep", "dialogue", "continuity", "timeline", "secrets", "relations", "db", "lore", "combat", "travel", "compile", "export", "profile", "canvas", "appearances"]:
         subparsers.add_parser(fwd_cmd)
 
 
@@ -312,6 +312,12 @@ def main():
         from canonforge.engines import canvas
         sys.argv = [sys.argv[0], *unknown]
         canvas.main()
+        return
+
+    if args.subcommand == "appearances":
+        from canonforge.engines import appearances
+        sys.argv = [sys.argv[0], *unknown]
+        appearances.main()
         return
 
 if __name__ == "__main__":

@@ -232,12 +232,19 @@ def main():
         canvas.main()
         return
 
+    # Chapter Appearance & Mention Citation Indexer
+    if first_arg == "appearances":
+        from canonforge.engines import appearances
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        appearances.main()
+        return
+
     # Authoring & Worldbuilding subcommands forwarded directly to universe_cli
     universe_forward_cmds = {
         "sensory", "pov", "prose", "thesaurus", "prep",
         "dialogue", "continuity", "timeline", "secrets",
         "lore", "relations", "db", "combat", "travel",
-        "compile", "profile", "canvas"
+        "compile", "profile", "canvas", "appearances"
     }
     if first_arg in universe_forward_cmds:
         from canonforge import universe_cli

@@ -144,7 +144,11 @@ def find_character_wiki(query: str, universe_dir: Path) -> Optional[Dict[str, An
         "biological_state": fm.get("biological_state", "Pure Flesh"),
         "status": fm.get("entity_status", fm.get("status", "Active")),
         "labels": fm.get("labels", []),
+        "aliases": fm.get("aliases", []),
         "invariants": invariants,
+        "visual_identity": fm.get("visual_identity", {}),
+        "quotes": fm.get("quotes", {}),
+        "production_meta": fm.get("production_meta", {}),
         "bio_summary": bio_summary,
         "full_fm": fm,
     }
@@ -304,8 +308,9 @@ def print_dossier(wiki: Dict[str, Any], db: Dict[str, Any], rel: Dict[str, Any],
     print(f"  • Chronological Age   : {age_str}")
     print(f"  • Biological State    : {wiki.get('biological_state', 'Pure Flesh')} ({wiki.get('birth_race', 'Standard')})")
 
-    # 2. Biometric Invariants & Continuity
-    print("\n👁️  SECTION 2: BIOMETRIC INVARIANTS & CONTINUITY GUARD")
+    # 2. Biometric Invariants & Visual Palette
+    visual = wiki.get("visual_identity", {})
+    print("\n👁️  SECTION 2: BIOMETRIC INVARIANTS & VISUAL PALETTE")
     if invariants:
         valid_eyes = invariants.get("valid_eye_colors", [])
         if valid_eyes:
@@ -323,17 +328,54 @@ def print_dossier(wiki: Dict[str, Any], db: Dict[str, Any], rel: Dict[str, Any],
             print(f"  • Bound Spirit/Relic  : ✨ {invariants['bound_animus']}")
         if "forbidden_traits" in invariants:
             print(f"  • Anti-Drift Guard    : 🚫 Prohibited: {', '.join(invariants['forbidden_traits'])}")
-    else:
+
+    if visual:
+        palette = visual.get("primary_palette", [])
+        if palette:
+            swatches = []
+            for sw in palette:
+                if isinstance(sw, dict):
+                    swatches.append(f"{sw.get('hex', '')} ({sw.get('name', '')})")
+                else:
+                    swatches.append(str(sw))
+            print(f"  • Color Palette (HEX) : 🎨 {', '.join(swatches)}")
+        if visual.get("portrait_asset"):
+            print(f"  • Portrait Asset      : 🖼️  {visual['portrait_asset']}")
+        if visual.get("fullbody_asset"):
+            print(f"  • Full-Body Concept   : 👤 {visual['fullbody_asset']}")
+
+    if not invariants and not visual:
         print("  • Standard biometrics active. No high-risk physical drift rules flagged for this entity.")
 
-    # 3. Narrative Synopsis
+    # 3. Canonical Synopsis & Voicelines
+    quotes = wiki.get("quotes", {})
     if wiki.get("bio_summary"):
         print("\n📖 SECTION 3: CANONICAL DOSSIER SYNOPSIS")
         print(f"  \"{wiki['bio_summary']}\"")
 
-    # 4. RPG Combat Attributes
+    if quotes:
+        print("\n💬 SECTION 4: IN-CHARACTER PERSPECTIVES & VOICELINES")
+        iconic = quotes.get("iconic")
+        if isinstance(iconic, list):
+            for ic in iconic:
+                txt = ic.get("text", "") if isinstance(ic, dict) else str(ic)
+                ctx = f" ({ic.get('context', '')})" if isinstance(ic, dict) and ic.get("context") else ""
+                print(f"  • Iconic Quote        : \"{txt}\"{ctx}")
+        elif isinstance(iconic, dict):
+            print(f"  • Iconic Quote        : \"{iconic.get('text', '')}\"")
+        elif iconic:
+            print(f"  • Iconic Quote        : \"{iconic}\"")
+
+        about = quotes.get("about", {})
+        if about and isinstance(about, dict):
+            print("  • Perspectives on Others:")
+            for tgt, quote_text in about.items():
+                clean_tgt = tgt.replace("_", " ").title()
+                print(f"    - About {clean_tgt:<18}: \"{quote_text}\"")
+
+    # 5. RPG Combat Attributes
     if db:
-        print("\n⚔️  SECTION 4: RPG COMBAT ATTRIBUTES & PROGRESSION")
+        print("\n⚔️  SECTION 5: RPG COMBAT ATTRIBUTES & PROGRESSION")
         level = db.get("level", 1)
         hp = db.get("max_hp", db.get("base_hp", 100))
         str_ = db.get("strength", 10)
@@ -344,9 +386,9 @@ def print_dossier(wiki: Dict[str, Any], db: Dict[str, Any], rel: Dict[str, Any],
         print(f"  • Level: {level} | HP: {hp} | State: {wiki.get('biological_state', 'Pure Flesh')}")
         print(f"  • Core Attributes: STR {str_} | DEX {dex_} | VIT {vit_} | WIL {wil_} | POWER {force_}")
 
-    # 5. Relational Topology
+    # 6. Relational Topology
     if rel and rel.get("total_connections", 0) > 0:
-        print("\n🕸️  SECTION 5: SOCIAL TOPOLOGY & RELATIONAL RADAR")
+        print("\n🕸️  SECTION 6: SOCIAL TOPOLOGY & RELATIONAL RADAR")
         print(f"  • Total Direct Connections : {rel['total_connections']} canonical bond(s)")
         if rel.get("allies"):
             ally_str = ", ".join([f"{e.get('target', 'Unknown')} (+{e.get('sentiment', 0):.2f})" for e in rel["allies"][:3]])
@@ -355,9 +397,17 @@ def print_dossier(wiki: Dict[str, Any], db: Dict[str, Any], rel: Dict[str, Any],
             rival_str = ", ".join([f"{e.get('target', 'Unknown')} ({e.get('sentiment', 0):.2f})" for e in rel["rivals"][:3]])
             print(f"  • Antagonists & Enmities    : 🔴 {rival_str}")
 
-    # 6. Manuscript Footprint
-    if foot and foot.get("appearances", 0) > 0:
-        print("\n📊 SECTION 6: MANUSCRIPT FOOTPRINT & TELEMETRY")
+    # 7. Manuscript Footprint & Chapter Citations
+    citations = wiki.get("citations", {})
+    if citations and (citations.get("total_appearances", 0) > 0 or citations.get("total_mentions", 0) > 0):
+        print("\n📊 SECTION 7: MANUSCRIPT FOOTPRINT & CHAPTER CITATIONS")
+        print(f"  • Active On-Page Presence : 🟢 {citations['total_appearances']} chapter(s)")
+        print(f"  • Passing On-Page Mentions : ⚪ {citations['total_mentions']} chapter(s)")
+        if foot.get("co_occurring"):
+            co_str = ", ".join([f"{c} ({cnt}x)" for c, cnt in foot["co_occurring"]])
+            print(f"  • Top Scene Partners       : 👥 {co_str}")
+    elif foot and foot.get("appearances", 0) > 0:
+        print("\n📊 SECTION 7: MANUSCRIPT FOOTPRINT & TELEMETRY")
         print(f"  • Documented Appearances   : {foot['appearances']} chapter(s) across the saga")
         if foot.get("books"):
             b_summary = ", ".join([f"{b}: {c} chs" for b, c in foot["books"].items()])
@@ -365,6 +415,15 @@ def print_dossier(wiki: Dict[str, Any], db: Dict[str, Any], rel: Dict[str, Any],
         if foot.get("co_occurring"):
             co_str = ", ".join([f"{c} ({cnt}x)" for c, cnt in foot["co_occurring"]])
             print(f"  • Top Scene Partners       : 👥 {co_str}")
+
+    # 8. Production Meta & Behind the Scenes
+    prod = wiki.get("production_meta", {})
+    if prod:
+        print("\n🎭 SECTION 8: PRODUCTION META & LITERARY MIRROR")
+        if prod.get("literary_mirror"):
+            print(f"  • Literary Mirror     : {prod['literary_mirror']}")
+        if prod.get("concept_origin"):
+            print(f"  • Concept Origin      : {prod['concept_origin']}")
 
     print("=" * 80 + "\n")
 
@@ -378,11 +437,22 @@ def build_profile(target: str, universe_dir: Optional[Path] = None, target_year:
     db_data = load_character_db_stats(wiki_data["id"], wiki_data["title"], u_root)
     rel_data = get_social_topology(wiki_data["title"], u_root)
     footprint = get_manuscript_footprint(wiki_data["title"], u_root)
+
+    # Calculate precise chapter citations
+    citations = {}
+    try:
+        from canonforge.engines.appearances import scan_character_appearances
+        citations = scan_character_appearances(wiki_data["title"], u_root, aliases=wiki_data.get("aliases", []))
+    except Exception:
+        pass
+    wiki_data["citations"] = citations
+
     return {
         "wiki": wiki_data,
         "game_db": db_data,
         "relations": rel_data,
         "footprint": footprint,
+        "citations": citations,
     }
 
 

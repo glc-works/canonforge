@@ -116,6 +116,26 @@
       "items": {
         "type": "string"
       }
+    },
+    "aliases": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "invariants": {
+      "type": "object",
+      "description": "Continuity guard invariants (eyes, scars, weapons, forbidden traits)"
+    },
+    "visual_identity": {
+      "type": "object",
+      "description": "Color swatches, HEX palettes, and asset links"
+    },
+    "quotes": {
+      "type": "object",
+      "description": "Iconic quotes and in-character perspectives on other figures"
+    },
+    "production_meta": {
+      "type": "object",
+      "description": "Behind-the-scenes literary mirrors and concept origins"
     }
   }
 }
