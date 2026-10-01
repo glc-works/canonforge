@@ -1,0 +1,32 @@
+canonforge/__init__.py
+  h_fcacc84ac57fba 8
+canonforge/cli/audit_cmd.py
+  h_fcacc84ac57fba 4-5,13,16,19-24,28-31,35-37,41-47,50,55-59,67-69,81-83,91-93,101,106-109,119,124-127,130-131,136-150,165-167,171,176-179,191-194,201-236,241,243-244,246,252,256,267-280,286,289,295,297,300-314,326,333-351
+canonforge/cli/authoring.py
+  h_fcacc84ac57fba 18,23
+canonforge/cli/main.py
+  h_fcacc84ac57fba 156,158-159,164-165
+canonforge/core/resolver.py
+  h_fcacc84ac57fba 1-173
+canonforge/engines/prep/cli.py
+  h_fcacc84ac57fba 19,25-36
+canonforge/engines/prep/locator.py
+  h_fcacc84ac57fba 43-48
+canonforge/engines/prep/prompt.py
+  h_fcacc84ac57fba 1-2,147-189
+pyproject.toml
+  h_fcacc84ac57fba 7
+uv.lock
+  h_fcacc84ac57fba 115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2845641472f138a04e41b37199e9737f8f89f30a",
+  "prompts": {},
+  "humans": {
+    "h_fcacc84ac57fba": {
+      "author": "Cid <308343041+convergenceID@users.noreply.github.com>"
+    }
+  }
+}
