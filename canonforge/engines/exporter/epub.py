@@ -1,22 +1,103 @@
 """
-Production EPUB3 generation engine with nav.xhtml and cover support.
+CanonForge Exporter: Production EPUB 3.0 Generation Engine
+--------------------------------------------------------------------------------
+Compiles valid, standards-compliant EPUB 3.0 e-books with nav.xhtml,
+NCX fallback, and custom typography for Apple Books, Kindle, and Kobo.
 """
+
 import re
 import html
+import uuid
 import zipfile
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 
-PACKAGE_ROOT = Path(__file__).resolve().parent.parent.parent
-MANUSCRIPT_DIR = PACKAGE_ROOT / "manuscript"
-WIKI_DIR = PACKAGE_ROOT / "wiki"
+from canonforge.engines.exporter.metadata import get_book_metadata, resolve_book_dir
 
-def generate_epub(book_slug: str, chapters_data: List[Dict[str, Any]]) -> Path:
+EPUB_CONTAINER_XML = """<?xml version="1.0" encoding="UTF-8"?>
+<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
+    <rootfiles>
+        <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>
+    </rootfiles>
+</container>
+"""
+
+EPUB_CSS = """@charset "UTF-8";
+body {
+    font-family: Georgia, Garamond, "Times New Roman", serif;
+    font-size: 1.05em;
+    line-height: 1.7;
+    margin: 5%;
+    padding: 0;
+    text-align: justify;
+}
+h1, h2, h3 {
+    text-align: center;
+    font-weight: normal;
+    color: #8b3a0f;
+    margin-top: 1.5em;
+    margin-bottom: 0.8em;
+}
+.chapter-number {
+    text-align: center;
+    font-size: 0.8em;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 0.3em;
+}
+p {
+    margin-top: 0;
+    margin-bottom: 1.2em;
+    text-indent: 1.5em;
+}
+p:first-of-type {
+    text-indent: 0;
+}
+.scene-break {
+    text-align: center;
+    color: #8b3a0f;
+    margin: 2em 0;
+    font-size: 1.1em;
+}
+.titlepage {
+    text-align: center;
+    margin-top: 20%;
+}
+.titlepage h1 {
+    font-size: 2.2em;
+    margin-bottom: 0.2em;
+}
+.titlepage .author {
+    font-size: 1.1em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 2em;
+}
+"""
+
+def generate_epub(
+    book_slug: str,
+    chapters_data: List[Dict[str, Any]],
+    out_dir: Optional[Path] = None,
+    base_dir: Optional[Path] = None
+) -> Path:
     """Natively compile valid, publication-grade EPUB 3.0 file."""
-    meta = get_book_metadata(MANUSCRIPT_DIR / book_slug)
+    book_path = resolve_book_dir(book_slug, base_dir)
+    meta = get_book_metadata(book_path) if book_path else {
+        "title": book_slug.replace("-", " ").title(),
+        "author": "Author",
+        "publisher": "CanonForge Publishing",
+        "language": "en",
+        "description": "Novel manuscript compiled by CanonForge.",
+        "rights": "All rights reserved by the author."
+    }
 
-    EXPORTS_DIR.mkdir(parents=True, exist_ok=True)
-    epub_path = EXPORTS_DIR / f"{book_slug}.epub"
+    target_dir = out_dir or (book_path.parent.parent / "_build" / "export" if book_path else Path.cwd() / "_build" / "export")
+    target_dir.mkdir(parents=True, exist_ok=True)
+    epub_path = target_dir / f"{book_slug}.epub"
+
     book_uuid = str(uuid.uuid4())
     mod_time = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
@@ -35,130 +116,103 @@ def generate_epub(book_slug: str, chapters_data: List[Dict[str, Any]]) -> Path:
         # 4. Titlepage
         titlepage_html = f"""<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>{html.escape(meta["title"])}</title>
+    <title>{html.escape(meta.get("title", book_slug))}</title>
     <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
     <div class="titlepage">
-        <h1>{html.escape(meta["title"])}</h1>
-        <div class="subtitle">{html.escape(meta["subtitle"])}</div>
-        <div class="author">{html.escape(meta["author"])}</div>
-        <p style="margin-top: 3em; font-size: 0.85em; color: #888;">{html.escape(meta["publisher"])}</p>
+        <h1>{html.escape(meta.get("title", book_slug))}</h1>
+        <div class="author">by {html.escape(meta.get("author", "Author"))}</div>
     </div>
 </body>
-</html>
-"""
+</html>"""
         zf.writestr("OEBPS/titlepage.xhtml", titlepage_html)
 
-        # 5. Chapters XHTML
+        # 5. Chapter XHTML files
         manifest_items = [
             '<item id="style" href="style.css" media-type="text/css"/>',
             '<item id="titlepage" href="titlepage.xhtml" media-type="application/xhtml+xml"/>',
             '<item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>',
             '<item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>'
         ]
-        spine_items = [
-            '<itemref idref="titlepage"/>'
-        ]
-        nav_toc_list = []
+        spine_items = ['<itemref idref="titlepage"/>']
+        nav_li_items = []
         ncx_nav_points = []
 
         for idx, ch in enumerate(chapters_data, 1):
-            ch_filename = f"ch{idx:02d}.xhtml"
-            ch_id = f"ch{idx:02d}"
-            manifest_items.append(f'<item id="{ch_id}" href="{ch_filename}" media-type="application/xhtml+xml"/>')
-            spine_items.append(f'<itemref idref="{ch_id}"/>')
-            
-            nav_toc_list.append(f'<li><a href="{ch_filename}">Chapter {idx}: {html.escape(ch["title"])}</a></li>')
-            ncx_nav_points.append(f"""
-            <navPoint id="navPoint-{idx+1}" playOrder="{idx+1}">
-                <navLabel><text>Chapter {idx}: {html.escape(ch["title"])}</text></navLabel>
-                <content src="{ch_filename}"/>
-            </navPoint>
-            """)
-
-            chapter_xhtml = f"""<?xml version="1.0" encoding="utf-8"?>
+            ch_filename = f"chapter_{idx:02d}.xhtml"
+            ch_title = html.escape(ch.get("title", f"Chapter {idx}"))
+            ch_xhtml = f"""<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>Chapter {idx}: {html.escape(ch["title"])}</title>
+    <title>{ch_title}</title>
     <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
     <div class="chapter-number">Chapter {idx}</div>
-    <h2>{html.escape(ch["title"])}</h2>
-    {ch["html_body"]}
+    <h2>{ch_title}</h2>
+    {ch.get("html_body", "")}
 </body>
-</html>
-"""
-            zf.writestr(f"OEBPS/{ch_filename}", chapter_xhtml)
+</html>"""
+            zf.writestr(f"OEBPS/{ch_filename}", ch_xhtml)
 
-        # 6. Nav Document (EPUB 3)
-        nav_xhtml = f"""<?xml version="1.0" encoding="utf-8"?>
+            item_id = f"chapter_{idx:02d}"
+            manifest_items.append(f'<item id="{item_id}" href="{ch_filename}" media-type="application/xhtml+xml"/>')
+            spine_items.append(f'<itemref idref="{item_id}"/>')
+            nav_li_items.append(f'<li><a href="{ch_filename}">{ch_title}</a></li>')
+            ncx_nav_points.append(f"""
+        <navPoint id="navPoint-{idx+1}" playOrder="{idx+1}">
+            <navLabel><text>{ch_title}</text></navLabel>
+            <content src="{ch_filename}"/>
+        </navPoint>""")
+
+        # 6. nav.xhtml (EPUB 3 Nav)
+        nav_html = f"""<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="en">
-<head>
-    <title>Table of Contents</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
-</head>
+<head><title>Table of Contents</title><link rel="stylesheet" type="text/css" href="style.css"/></head>
 <body>
     <nav epub:type="toc" id="toc">
         <h1>Table of Contents</h1>
         <ol>
-            {chr(10).join(nav_toc_list)}
+            {"".join(nav_li_items)}
         </ol>
     </nav>
 </body>
-</html>
-"""
-        zf.writestr("OEBPS/nav.xhtml", nav_xhtml)
+</html>"""
+        zf.writestr("OEBPS/nav.xhtml", nav_html)
 
-        # 7. NCX Document (EPUB 2 backward compatibility)
-        toc_ncx = f"""<?xml version="1.0" encoding="UTF-8"?>
+        # 7. toc.ncx (EPUB 2 backward compatibility)
+        toc_ncx = f"""<?xml version="1.0" encoding="utf-8"?>
 <ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
-    <head>
-        <meta name="dtb:uid" content="urn:uuid:{book_uuid}"/>
-        <meta name="dtb:depth" content="1"/>
-        <meta name="dtb:totalPageCount" content="0"/>
-        <meta name="dtb:maxPageNumber" content="0"/>
-    </head>
-    <docTitle><text>{html.escape(meta["title"])}</text></docTitle>
-    <docAuthor><text>{html.escape(meta["author"])}</text></docAuthor>
+    <head><meta name="dtb:uid" content="urn:uuid:{book_uuid}"/></head>
+    <docTitle><text>{html.escape(meta.get("title", book_slug))}</text></docTitle>
     <navMap>
-        <navPoint id="navPoint-1" playOrder="1">
-            <navLabel><text>Title Page</text></navLabel>
-            <content src="titlepage.xhtml"/>
-        </navPoint>
         {"".join(ncx_nav_points)}
     </navMap>
-</ncx>
-"""
+</ncx>"""
         zf.writestr("OEBPS/toc.ncx", toc_ncx)
 
-        # 8. Content.opf (Master Package Document)
+        # 8. content.opf
         content_opf = f"""<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://www.idpf.org/2007/opf" unique-identifier="BookId" version="3.0">
     <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
         <dc:identifier id="BookId">urn:uuid:{book_uuid}</dc:identifier>
-        <dc:title>{html.escape(meta["title"])}</dc:title>
-        <dc:creator>{html.escape(meta["author"])}</dc:creator>
-        <dc:publisher>{html.escape(meta["publisher"])}</dc:publisher>
-        <dc:language>{meta["language"]}</dc:language>
-        <dc:description>{html.escape(meta["description"])}</dc:description>
-        <dc:rights>{html.escape(meta["rights"])}</dc:rights>
+        <dc:title>{html.escape(meta.get("title", book_slug))}</dc:title>
+        <dc:creator>{html.escape(meta.get("author", "Author"))}</dc:creator>
+        <dc:language>{meta.get("language", "en")}</dc:language>
         <meta property="dcterms:modified">{mod_time}</meta>
     </metadata>
     <manifest>
-        {chr(10).join(manifest_items)}
+        {"".join(manifest_items)}
     </manifest>
     <spine toc="ncx">
-        {chr(10).join(spine_items)}
+        {"".join(spine_items)}
     </spine>
-</package>
-"""
+</package>"""
         zf.writestr("OEBPS/content.opf", content_opf)
 
     return epub_path
-

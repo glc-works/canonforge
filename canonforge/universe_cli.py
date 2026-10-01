@@ -125,6 +125,11 @@ def main():
     p_thes.add_argument("--intensity", type=int, choices=[1, 2, 3], help="Filter by intensity (1-3)")
     p_thes.add_argument("--format", choices=["text", "json"], default="text", help="Output format (text/json)")
 
+    # Additional forwarded subcommands
+    for fwd_cmd in ["prep", "dialogue", "continuity", "timeline", "secrets", "relations", "db", "lore", "combat", "travel", "compile", "export"]:
+        subparsers.add_parser(fwd_cmd)
+
+
     args, unknown = parser.parse_known_args()
     u_root = find_universe_root()
 

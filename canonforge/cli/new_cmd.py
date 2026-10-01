@@ -378,3 +378,27 @@ Detail character background, internal wounds, and narrative desire here.
 """
     c_path.write_text(content, encoding="utf-8")
     print(f"✅ Created character profile: {style(name, 'bold')} [{slug}] at: {c_path}")
+
+def new_asset(args):
+    """Scaffold a new visual asset with metadata sidecar."""
+    from canonforge.engines.assets import create_asset_entry
+    u_dir = _resolve_universe_dir(getattr(args, "universe", None))
+    src = Path(args.file) if getattr(args, "file", None) else None
+    res = create_asset_entry(
+        name=args.name,
+        asset_type=getattr(args, "type", "concept"),
+        source_file=src,
+        prompt=getattr(args, "prompt", None),
+        model=getattr(args, "model", "FLUX / Midjourney"),
+        lore_reference=getattr(args, "lore", None),
+        notes=getattr(args, "notes", None),
+        base_dir=u_dir
+    )
+    print(f"\n🎨 Asset Created: {style(res['name'], 'bold')} [{res['slug']}]")
+    print(f"   Category : {res['type'].title()}")
+    print(f"   Image    : {res['image_file']}")
+    print(f"   Sidecar  : {res['sidecar_file']}")
+    if res["linked_entity"]:
+        print(f"   Linked To: {res['linked_entity'].name}")
+    print()
+

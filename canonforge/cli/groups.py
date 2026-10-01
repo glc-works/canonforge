@@ -21,6 +21,7 @@ CAPABILITY_GROUPS: Dict[str, List[Tuple[str, str]]] = {
     "AUTHORING": [
         ("prep", "Prepare authoring brief and drafting context pack"),
         ("dialogue", "Audit dialogue beats, subtext, and speech tags"),
+        ("play", "Interactive Ink branching dialogue runner & HTML player"),
         ("thesaurus", "Lookup evocative sensory synonyms and antonyms"),
     ],
     "AUDITING": [
@@ -34,6 +35,8 @@ CAPABILITY_GROUPS: Dict[str, List[Tuple[str, str]]] = {
         ("secrets", "Information disclosure and dramatic irony tracking gate"),
     ],
     "WORLDBUILDING": [
+        ("search", "Universal search across wiki dossiers and local game database"),
+        ("update", "Update entity attributes, status, and tags with safe diffs"),
         ("lore", "SSOT lore bible validator and entity extractor"),
         ("relations", "Character social graph and faction network validator"),
         ("db", "Game world database sync and SQL schema generator"),
@@ -46,6 +49,7 @@ CAPABILITY_GROUPS: Dict[str, List[Tuple[str, str]]] = {
     ],
     "AGENT": [
         ("skill", "Export agent rules and skills (Cursor, Claude, Antigravity)"),
+        ("obsidian", "Install and configure CanonForge Studio Obsidian plugin"),
     ],
 }
 

@@ -58,15 +58,26 @@ BOOK_METADATA: Dict[str, Dict[str, Any]] = {}
 # LIGHTWEIGHT MARKDOWN TO CLEAN XHTML/HTML CONVERTER
 # ==============================================================================
 
-def resolve_book_dir(book_slug: str) -> Optional[Path]:
-    p = MANUSCRIPT_DIR / book_slug
+def resolve_book_dir(book_slug: str, base_dir: Optional[Path] = None) -> Optional[Path]:
+    ms_dir = base_dir
+    if not ms_dir:
+        curr = Path.cwd().resolve()
+        for cand in [curr, *curr.parents]:
+            if (cand / "manuscript").is_dir():
+                ms_dir = cand / "manuscript"
+                break
+        if not ms_dir:
+            ms_dir = MANUSCRIPT_DIR
+
+    p = ms_dir / book_slug
     if p.exists() and (p / "chapters").exists():
         return p
-    for b_dir in list(MANUSCRIPT_DIR.glob(f"*/{book_slug}")) + list(MANUSCRIPT_DIR.glob(f"*/*{book_slug}*")):
+    for b_dir in list(ms_dir.glob(f"*/{book_slug}")) + list(ms_dir.glob(f"*/*{book_slug}*")):
         if b_dir.is_dir() and (b_dir / "chapters").exists():
             return b_dir
-    for toc in MANUSCRIPT_DIR.glob("*/*/toc.yaml"):
-        if book_slug.lower() in toc.parent.name.lower() or book_slug.lower() in toc.read_text(encoding="utf-8").lower():
+    for toc in ms_dir.glob("*/*/toc.yaml"):
+        if book_slug.lower() in toc.parent.name.lower():
             return toc.parent
     return None
+
 

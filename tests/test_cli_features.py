@@ -78,5 +78,82 @@ class TestCliFeatures(unittest.TestCase):
             self.assertIn("CanonForge", p_cursor.read_text(encoding="utf-8"))
             self.assertIn("cf audit", p_claude.read_text(encoding="utf-8"))
 
+    def test_chapter_and_book_export(self):
+        from canonforge.engines.exporter.chapter_export import export_chapter_file
+        from canonforge.engines.exporter.cli import export_single_book
+        from canonforge.engines.exporter.series_export import export_series_omnibus
+
+        ch_path = REPO_ROOT / "examples" / "aetheria" / "manuscript" / "skies-of-iron" / "book-01" / "chapters" / "ch01-the-iron-skiff.md"
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_p = Path(tmp_dir)
+            # 1. Chapter export
+            res_ch = export_chapter_file(ch_path, platform="substack", out_dir=tmp_p)
+            self.assertTrue(res_ch["out_file"].is_file())
+            self.assertIn("The Iron Skiff", res_ch["out_file"].read_text(encoding="utf-8"))
+
+            # 2. Book export
+            ms_dir = REPO_ROOT / "examples" / "aetheria" / "manuscript"
+            ok = export_single_book("skies-of-iron/book-01", output_format="all", base_dir=ms_dir)
+            self.assertTrue(ok)
+
+            # 3. Series Omnibus export
+            res_series = export_series_omnibus("skies-of-iron", base_dir=REPO_ROOT / "examples" / "aetheria")
+            self.assertEqual(res_series["total_chapters"], 2)
+            self.assertTrue(res_series["markdown_file"].is_file())
+
+    def test_asset_scaffolding(self):
+        from canonforge.engines.assets import create_asset_entry
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            res = create_asset_entry("test-map", asset_type="map", prompt="Fantasy map", base_dir=Path(tmp_dir))
+            self.assertTrue(res["sidecar_file"].is_file())
+            self.assertIn("Fantasy map", res["sidecar_file"].read_text(encoding="utf-8"))
+
+    def test_obsidian_plugin_install(self):
+        from canonforge.engines.obsidian import install_obsidian_plugin
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            p_dir = install_obsidian_plugin(Path(tmp_dir))
+            self.assertTrue((p_dir / "manifest.json").is_file())
+    def test_search_and_update(self):
+        from canonforge.engines.search import search_entities
+        from canonforge.engines.updater import update_entity
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_p = Path(tmp_dir)
+            wiki_dir = tmp_p / "wiki" / "characters"
+            wiki_dir.mkdir(parents=True)
+            char_file = wiki_dir / "captain-elena.md"
+            char_file.write_text(
+                "---\nname: Captain Elena\nrole: Airship Pilot\nstatus: Active\ntags:\n  - hero\n---\n\nCaptain Elena navigates the cloud-sea.\n",
+                encoding="utf-8"
+            )
+
+            # 1. Test search
+            results, suggestions = search_entities("Elena", root_dir=tmp_p)
+            self.assertEqual(len(results), 1)
+            self.assertEqual(results[0]["name"], "Captain Elena")
+
+            # 2. Test fuzzy typo search
+            results_typo, suggestions_typo = search_entities("Elana", root_dir=tmp_p)
+            self.assertIn("Captain Elena", suggestions_typo)
+
+            # 3. Test update
+            updated = update_entity(
+                "Captain Elena",
+                updates={"role": "Fleet Admiral", "status": "Veteran"},
+                add_tags=["legend"],
+                auto_confirm=True,
+                no_sync=True,
+                root_dir=tmp_p,
+            )
+            self.assertTrue(updated)
+
+            # Verify file contents
+            content = char_file.read_text(encoding="utf-8")
+            self.assertIn("role: Fleet Admiral", content)
+            self.assertIn("status: Veteran", content)
+            self.assertIn("- legend", content)
+            self.assertIn("Captain Elena navigates the cloud-sea.", content)
+
 if __name__ == "__main__":
     unittest.main()
+

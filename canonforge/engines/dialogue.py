@@ -14,9 +14,17 @@ import argparse
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional, Any
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-CONVERGENCE_DIR = SCRIPT_DIR.parent
-DIALOGUE_DIR = CONVERGENCE_DIR / "dialogue"
+from typing import Dict, List, Tuple, Optional, Any
+
+def _find_project_dir() -> Path:
+    cwd = Path.cwd().resolve()
+    for parent in [cwd, *cwd.parents]:
+        if (parent / "universe.yaml").exists() or (parent / "dialogue").exists():
+            return parent
+    return cwd
+
+PROJECT_DIR = _find_project_dir()
+DIALOGUE_DIR = PROJECT_DIR / "dialogue"
 
 class InkKnot:
     def __init__(self, name: str):
@@ -440,17 +448,30 @@ def export_html_player(story: InkStory, output_path: Path):
 </html>
 """
     output_path.write_text(html_content, encoding="utf-8")
-    print(f"🎭 Interactive HTML Dialogue Player exported to: {output_path.relative_to(CONVERGENCE_DIR)}")
+    try:
+        rel_path = output_path.relative_to(PROJECT_DIR)
+    except ValueError:
+        rel_path = output_path
+    print(f"🎭 Interactive HTML Dialogue Player exported to: {rel_path}")
     print(f"   Size: {output_path.stat().st_size / 1024:.1f} KB (Self-contained, opens in any web browser)")
 
 def main():
     parser = argparse.ArgumentParser(description="CanonForge Interactive Ink Dialogue Player")
-    parser.add_argument("--file", default="dialogue/stone-child-the-cut.ink", help="Path to .ink dialogue file")
+    parser.add_argument("--file", "-f", help="Path to .ink dialogue file")
     parser.add_argument("--test", action="store_true", help="Automated graph traversal and reachability test")
     parser.add_argument("--export-html", action="store_true", help="Export standalone interactive HTML player")
     args = parser.parse_args()
 
-    file_path = CONVERGENCE_DIR / args.file if not Path(args.file).is_absolute() else Path(args.file)
+    if args.file:
+        file_path = PROJECT_DIR / args.file if not Path(args.file).is_absolute() else Path(args.file)
+    else:
+        # Auto-discover first .ink file in dialogue directory
+        ink_candidates = list(DIALOGUE_DIR.glob("*.ink")) if DIALOGUE_DIR.exists() else []
+        if ink_candidates:
+            file_path = ink_candidates[0]
+        else:
+            print("❌ Error: No .ink dialogue file specified and none found in dialogue/ folder.")
+            sys.exit(1)
     if not file_path.exists():
         print(f"❌ Error: Dialogue file not found: {file_path}")
         sys.exit(1)

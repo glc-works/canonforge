@@ -23,6 +23,7 @@ from canonforge.cli.new_cmd import (
     new_book,
     new_chapter,
     new_character,
+    new_asset,
 )
 from canonforge.cli.audit_cmd import cmd_audit, cmd_review
 from canonforge.cli.skill_cmd import cmd_skill_export, cmd_skill_show
@@ -33,7 +34,7 @@ def _get_all_valid_commands() -> list:
         for cmd_name, _ in group_cmds:
             cmds.append(cmd_name)
     # Add common aliases
-    cmds.extend(["scaffold", "polish"])
+    cmds.extend(["scaffold", "polish", "obsidian"])
     return sorted(list(set(cmds)))
 
 def build_parser() -> argparse.ArgumentParser:
@@ -102,6 +103,18 @@ def build_parser() -> argparse.ArgumentParser:
     p_nch.add_argument("--universe", "-u", help="Target universe")
     p_nch.set_defaults(func=new_character)
 
+    # cf new asset
+    p_na = new_sub.add_parser("asset", help="Scaffold a new visual asset (map, concept, character art)")
+    p_na.add_argument("name", help="Asset display name or slug")
+    p_na.add_argument("--type", "-t", choices=["map", "concept", "character", "item", "place", "artwork"], default="concept", help="Asset category")
+    p_na.add_argument("--file", "-f", help="Source image file to import")
+    p_na.add_argument("--prompt", "-p", help="Generation prompt used")
+    p_na.add_argument("--model", "-m", default="FLUX / Midjourney", help="Model used")
+    p_na.add_argument("--lore", "-l", help="Wiki entity name/slug to link")
+    p_na.add_argument("--notes", help="Usage notes")
+    p_na.add_argument("--universe", "-u", help="Target universe")
+    p_na.set_defaults(func=new_asset)
+
     # init alias to new universe
     p_init = subparsers.add_parser("init", aliases=["scaffold"], help="Initialize a new universe")
     p_init.add_argument("slug", help="Slug for the universe")
@@ -149,12 +162,47 @@ def main():
 
     first_arg = sys.argv[1]
 
+    # Obsidian integration command
+    if first_arg == "obsidian":
+        from canonforge.engines import obsidian
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        obsidian.main()
+        return
+
+    # Search / Lore Query command
+    if first_arg == "search":
+        from canonforge.engines import search
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        search.main()
+        return
+
+    # Update Entity Dossier command
+    if first_arg == "update":
+        from canonforge.engines import updater
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        updater.main()
+        return
+
+    # Play Dialogue (alias to dialogue)
+    if first_arg == "play":
+        from canonforge.engines import dialogue
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        dialogue.main()
+        return
+
+    # Export / Publishing command (chapter, book, series)
+    if first_arg == "export":
+        from canonforge.engines.exporter import cli as exp_cli
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        exp_cli.main()
+        return
+
     # Authoring & Worldbuilding subcommands forwarded directly to universe_cli
     universe_forward_cmds = {
         "sensory", "pov", "prose", "thesaurus", "prep",
         "dialogue", "continuity", "timeline", "secrets",
         "lore", "relations", "db", "combat", "travel",
-        "compile", "export"
+        "compile"
     }
     if first_arg in universe_forward_cmds:
         from canonforge import universe_cli
