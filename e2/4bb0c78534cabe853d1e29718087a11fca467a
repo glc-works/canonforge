@@ -1,0 +1,30 @@
+canonforge/cli/groups.py
+  h_fcacc84ac57fba 40
+canonforge/cli/main.py
+  h_fcacc84ac57fba 235-241,247
+canonforge/data/sql/schema.sql
+  h_fcacc84ac57fba 209,237,254,269
+canonforge/engines/appearances.py
+  h_fcacc84ac57fba 1-203
+canonforge/engines/profile.py
+  h_fcacc84ac57fba 147,149-151,311-313,331-347,350-351,356-376,378,389,391,400-410,419-427,440-449,455
+canonforge/schemas/character.schema.json
+  h_fcacc84ac57fba 119-138
+canonforge/universe_cli.py
+  h_fcacc84ac57fba 129,317-322
+pyproject.toml
+  h_fcacc84ac57fba 7
+uv.lock
+  h_fcacc84ac57fba 115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e24bb0c78534cabe853d1e29718087a11fca467a",
+  "prompts": {},
+  "humans": {
+    "h_fcacc84ac57fba": {
+      "author": "Cid <308343041+convergenceID@users.noreply.github.com>"
+    }
+  }
+}
