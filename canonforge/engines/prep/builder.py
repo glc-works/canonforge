@@ -2,14 +2,37 @@
 Instant scene brief synthesis engine.
 """
 import re
+import time
 from pathlib import Path
 from typing import Dict, Any, Optional
 
-PACKAGE_ROOT = Path(__file__).resolve().parent.parent.parent
-MANUSCRIPT_DIR = PACKAGE_ROOT / "manuscript"
+from canonforge.core.manifest import find_universe_root
+
+UNIVERSE_DIR = find_universe_root()
+MANUSCRIPT_DIR = UNIVERSE_DIR / "manuscript"
 
 from canonforge.engines.prep.locator import find_chapter_target, parse_frontmatter
 from canonforge.engines.prep.palettes import extract_previous_chapter_hook, get_setting_sensory_palette
+
+try:
+    from canonforge.engines import relations as cr
+    HAS_CR = True
+except ImportError:
+    try:
+        import character_relations as cr
+        HAS_CR = True
+    except ImportError:
+        HAS_CR = False
+
+try:
+    from canonforge.engines import continuity as cp
+    HAS_CP = True
+except ImportError:
+    try:
+        import character_profile as cp
+        HAS_CP = True
+    except ImportError:
+        HAS_CP = False
 
 def generate_scene_brief(
     target_query: Optional[str] = None,
@@ -118,7 +141,8 @@ def generate_scene_brief(
     invariants = []
     if HAS_CP:
         for char_name in chars_present:
-            wiki_data = cp.load_character_from_wiki(char_name)
+            loader = getattr(cp, "load_character_from_wiki", None)
+            wiki_data = loader(char_name) if loader else None
             char_title = wiki_data.get("title", char_name) if wiki_data else char_name
             
             # Lookup in KNOWN_INVARIANTS

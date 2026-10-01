@@ -7,8 +7,10 @@ import subprocess
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
 
-PACKAGE_ROOT = Path(__file__).resolve().parent.parent.parent
-MANUSCRIPT_DIR = PACKAGE_ROOT / "manuscript"
+from canonforge.core.manifest import find_universe_root
+
+UNIVERSE_DIR = find_universe_root()
+MANUSCRIPT_DIR = UNIVERSE_DIR / "manuscript"
 
 try:
     import character_profile as cp
@@ -64,7 +66,7 @@ def find_chapter_target(
     if p.exists() and p.is_file():
         return p
 
-    p_conv = CONVERGENCE_DIR / query
+    p_conv = UNIVERSE_DIR / query
     if p_conv.exists() and p_conv.is_file():
         return p_conv
 
@@ -117,14 +119,14 @@ def get_git_modified_chapters() -> List[Path]:
     try:
         res = subprocess.run(
             ["git", "status", "--porcelain", "manuscript/"],
-            cwd=str(CONVERGENCE_DIR),
+            cwd=str(UNIVERSE_DIR),
             capture_output=True,
             text=True
         )
         for line in res.stdout.splitlines():
             parts = line.strip().split()
             if len(parts) >= 2:
-                fpath = CONVERGENCE_DIR / parts[-1]
+                fpath = UNIVERSE_DIR / parts[-1]
                 if fpath.suffix == ".md" and "chapters" in str(fpath) and fpath.exists():
                     modified.append(fpath)
     except Exception:

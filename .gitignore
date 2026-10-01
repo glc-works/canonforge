@@ -55,5 +55,7 @@ coverage.xml
 _build/
 *.epub
 *.pdf
+*.db
+*.sqlite
 compiled/
 *.tmp

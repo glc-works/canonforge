@@ -1,6 +1,8 @@
 """
 Mermaid diagram generation & SQLite database synchronization
 """
+import re
+import json
 import sqlite3
 from pathlib import Path
 from typing import Dict, Any, Optional

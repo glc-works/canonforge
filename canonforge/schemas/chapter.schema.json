@@ -34,7 +34,7 @@
     },
     "status": {
       "type": "string",
-      "enum": ["draft", "revised", "polished", "canonical"]
+      "enum": ["draft", "in-progress", "revised", "completed", "polished", "canonical", "canon"]
     },
     "authority": {
       "type": "string",

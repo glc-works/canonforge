@@ -4,7 +4,11 @@ PostgreSQL relational seed script generator.
 import re
 from pathlib import Path
 from typing import Dict, List, Any
+from canonforge.core.manifest import find_universe_root
 from canonforge.engines.db.scanner import escape_sql
+
+UNIVERSE_DIR = find_universe_root()
+DATA_DIR = UNIVERSE_DIR / "data"
 
 def export_all_sql_seeds(
     chars: List[Dict[str, Any]],

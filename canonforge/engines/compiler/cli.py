@@ -2,12 +2,14 @@
 CLI entrypoint for manuscript compilation.
 """
 import sys
+import re
 import argparse
 from pathlib import Path
 from typing import Optional
 
 from canonforge.engines.compiler.assembler import (
-    load_from_manifest, discover_chapters_fallback, compile_manuscript, resolve_book_dir
+    load_from_manifest, discover_chapters_fallback, compile_manuscript, resolve_book_dir,
+    MANUSCRIPT_DIR, COMPILED_DIR
 )
 from canonforge.engines.compiler.analytics import generate_analytics_report
 from canonforge.engines.compiler.epub import build_epub

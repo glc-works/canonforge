@@ -5,6 +5,12 @@ import re
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
+try:
+    import yaml
+    HAS_YAML = True
+except ImportError:
+    HAS_YAML = False
+
 def parse_yaml_frontmatter(content: str) -> Optional[Dict[str, Any]]:
     """Robust YAML frontmatter parser supporting PyYAML with fallback."""
     match = re.match(r"^---\s*\n(.*?)\n---\s*\n", content, re.DOTALL)
@@ -98,7 +104,10 @@ def scan_markdown_entities(directory: Path, entity_type: Optional[str] = None) -
         meta = parse_yaml_frontmatter(content)
         if meta:
             if entity_type is None or meta.get("type") == entity_type:
-                meta["_file_path"] = str(md_file.relative_to(CONVERGENCE_DIR))
+                try:
+                    meta["_file_path"] = str(md_file.relative_to(target_dir.parent))
+                except Exception:
+                    meta["_file_path"] = str(md_file)
                 meta["_filename"] = md_file.name
                 meta["description_md"] = extract_body_markdown(content)
                 entities.append(meta)

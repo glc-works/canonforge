@@ -1,9 +1,14 @@
-"""
-Graph exploration & shortest path traversal
-"""
+import difflib
 from collections import deque
 from typing import Dict, List, Set, Any, Optional, Tuple
-from canonforge.engines.relations.timeline import resolve_active_relationship, resolve_character_name
+
+try:
+    from tabulate import tabulate
+    HAS_TABULATE = True
+except ImportError:
+    HAS_TABULATE = False
+
+from canonforge.engines.relations.timeline import resolve_active_relationship, resolve_character_name, get_all_characters
 
 def build_adjacency_graph(
     data: Dict[str, Any],

@@ -3,6 +3,13 @@ Novel manuscript prose telemetry and analytics reporter.
 """
 from typing import Dict, List, Any
 
+try:
+    from tabulate import tabulate
+except ImportError:
+    tabulate = lambda rows, headers, tablefmt: "\n".join(str(r) for r in rows)
+
+WORDS_PER_MINUTE = 220
+
 def generate_analytics_report(chapters: List[Dict[str, Any]], book_name: str):
     """Print storytelling pacing analytics and character presence index."""
     total_words = sum(c["actual_words"] for c in chapters)

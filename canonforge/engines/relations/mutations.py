@@ -1,13 +1,18 @@
 """
 CRUD operations and timeline slice mutations
 """
+import re
 import json
+from collections import deque
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 from canonforge.engines.relations.timeline import (
     load_relationships_data, save_relationships_data,
-    resolve_character_name, get_all_characters, RELATIONSHIPS_FILE
+    resolve_character_name, get_all_characters,
+    resolve_active_relationship, RELATIONSHIPS_FILE
 )
+from canonforge.engines.relations.graph import build_adjacency_graph
+from canonforge.engines.relations.exporter import sync_relationships_to_db
 
 def check_relationship_exists(
     char_a_query: str,

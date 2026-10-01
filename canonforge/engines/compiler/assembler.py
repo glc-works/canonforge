@@ -2,12 +2,22 @@
 Manuscript chapter parser and multi-act assembler.
 """
 import os
+import sys
 import re
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
-PACKAGE_ROOT = Path(__file__).resolve().parent.parent.parent
-MANUSCRIPT_DIR = PACKAGE_ROOT / "manuscript"
+try:
+    import yaml
+    HAS_YAML = True
+except ImportError:
+    HAS_YAML = False
+
+from canonforge.core.manifest import find_universe_root
+
+UNIVERSE_DIR = find_universe_root()
+MANUSCRIPT_DIR = UNIVERSE_DIR / "manuscript"
+COMPILED_DIR = MANUSCRIPT_DIR / "_build" / "compiled"
 
 def parse_scene_file(file_path: Path) -> Optional[Dict[str, Any]]:
     """Parse scene file, extracting frontmatter metadata and body prose."""

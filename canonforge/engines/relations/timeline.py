@@ -10,9 +10,11 @@ import sqlite3
 from pathlib import Path
 from typing import Dict, List, Set, Any, Optional, Tuple
 
-PACKAGE_ROOT = Path(__file__).resolve().parent.parent.parent
-RELATIONSHIPS_FILE = PACKAGE_ROOT / "wiki" / "database" / "relationships.json"
-DB_PATH = PACKAGE_ROOT / "data" / "game_world.db"
+from canonforge.core.manifest import find_universe_root
+
+UNIVERSE_DIR = find_universe_root()
+RELATIONSHIPS_FILE = UNIVERSE_DIR / "wiki" / "database" / "relationships.json"
+DB_PATH = UNIVERSE_DIR / "data" / "game_world.db"
 def load_relationships_data() -> Dict[str, Any]:
     """Load canonical relationships from SSOT JSON file with fallback."""
     if not RELATIONSHIPS_FILE.exists():

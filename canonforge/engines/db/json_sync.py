@@ -2,8 +2,11 @@
 Normalized JSON database generation from scanned markdown lore.
 """
 import json
-from pathlib import Path
 from typing import Dict, List, Any
+from canonforge.core.manifest import find_universe_root
+
+UNIVERSE_DIR = find_universe_root()
+DATA_DIR = UNIVERSE_DIR / "data"
 
 def sync_all_json(
     chars: List[Dict[str, Any]],

@@ -4,7 +4,15 @@ Cast interaction matrix & chapter continuity audit
 import re
 from pathlib import Path
 from typing import Dict, List, Set, Any, Optional
+
+try:
+    from tabulate import tabulate
+    HAS_TABULATE = True
+except ImportError:
+    HAS_TABULATE = False
+
 from canonforge.engines.relations.timeline import resolve_active_relationship, resolve_character_name, get_all_characters
+from canonforge.engines.relations.graph import build_adjacency_graph
 
 def build_cast_matrix(cast_names: List[str], data: Dict[str, Any], ao_year: Optional[int] = None) -> bool:
     """Build an NxN mutual relationship matrix for a list of characters at a given era."""

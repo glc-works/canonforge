@@ -10,19 +10,27 @@ import sys
 import argparse
 from pathlib import Path
 
-PACKAGE_ROOT = Path(__file__).resolve().parent.parent
-WIKI_DIR = PACKAGE_ROOT / "wiki"
-DATA_DIR = PACKAGE_ROOT / "data"
+from canonforge.core.manifest import find_universe_root
 
-CHARACTERS_WIKI = WIKI_DIR / "terms" / "characters"
-BESTIARY_WIKI = WIKI_DIR / "terms" / "monsters"
-SKILLS_WIKI = WIKI_DIR / "terms" / "skills"
-EQUIPMENT_WIKI = WIKI_DIR / "terms" / "equipment"
-ITEMS_WIKI = WIKI_DIR / "terms" / "items"
-RECIPES_WIKI = WIKI_DIR / "terms" / "recipes"
-QUESTS_WIKI = WIKI_DIR / "terms" / "quests"
-FACTIONS_WIKI = WIKI_DIR / "terms" / "factions"
-PLACES_WIKI = WIKI_DIR / "terms" / "places"
+UNIVERSE_DIR = find_universe_root()
+WIKI_DIR = UNIVERSE_DIR / "wiki"
+DATA_DIR = UNIVERSE_DIR / "data"
+
+def _resolve_wiki_sub(*candidates: Path) -> Path:
+    for c in candidates:
+        if c.exists():
+            return c
+    return candidates[0]
+
+CHARACTERS_WIKI = _resolve_wiki_sub(WIKI_DIR / "terms" / "characters", WIKI_DIR / "characters")
+BESTIARY_WIKI = _resolve_wiki_sub(WIKI_DIR / "database" / "bestiary", WIKI_DIR / "terms" / "monsters", WIKI_DIR / "monsters")
+SKILLS_WIKI = _resolve_wiki_sub(WIKI_DIR / "database" / "skills", WIKI_DIR / "terms" / "skills", WIKI_DIR / "skills")
+EQUIPMENT_WIKI = _resolve_wiki_sub(WIKI_DIR / "database" / "equipment", WIKI_DIR / "terms" / "equipment", WIKI_DIR / "equipment")
+ITEMS_WIKI = _resolve_wiki_sub(WIKI_DIR / "database" / "items", WIKI_DIR / "terms" / "items", WIKI_DIR / "items")
+RECIPES_WIKI = _resolve_wiki_sub(WIKI_DIR / "database" / "recipes", WIKI_DIR / "terms" / "recipes", WIKI_DIR / "recipes")
+QUESTS_WIKI = _resolve_wiki_sub(WIKI_DIR / "database" / "quests", WIKI_DIR / "terms" / "quests", WIKI_DIR / "quests")
+FACTIONS_WIKI = _resolve_wiki_sub(WIKI_DIR / "terms" / "factions", WIKI_DIR / "factions")
+PLACES_WIKI = _resolve_wiki_sub(WIKI_DIR / "terms" / "places", WIKI_DIR / "places")
 
 from canonforge.engines.db.scanner import scan_markdown_entities
 from canonforge.engines.db.validator import validate_all

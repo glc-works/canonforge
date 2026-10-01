@@ -458,7 +458,7 @@ def export_html_player(story: InkStory, output_path: Path):
 def main():
     parser = argparse.ArgumentParser(description="CanonForge Interactive Ink Dialogue Player")
     parser.add_argument("--file", "-f", help="Path to .ink dialogue file")
-    parser.add_argument("--test", action="store_true", help="Automated graph traversal and reachability test")
+    parser.add_argument("--test", "--validate", action="store_true", help="Automated graph traversal and reachability test")
     parser.add_argument("--export-html", action="store_true", help="Export standalone interactive HTML player")
     args = parser.parse_args()
 

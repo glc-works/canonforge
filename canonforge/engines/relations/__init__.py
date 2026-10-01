@@ -9,6 +9,8 @@ from canonforge.engines.relations.timeline import (
     get_all_characters,
     resolve_character_name,
     resolve_active_relationship,
+    DB_PATH,
+    RELATIONSHIPS_FILE,
 )
 from canonforge.engines.relations.graph import (
     build_adjacency_graph,
@@ -48,5 +50,7 @@ __all__ = [
     "add_relationship",
     "update_relationship",
     "add_timeline_slice",
+    "DB_PATH",
+    "RELATIONSHIPS_FILE",
     "main",
 ]

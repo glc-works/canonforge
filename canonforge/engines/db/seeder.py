@@ -8,11 +8,15 @@ import sqlite3
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
-PACKAGE_ROOT = Path(__file__).resolve().parent.parent.parent
-DATA_DIR = PACKAGE_ROOT / "data"
-WIKI_DIR = PACKAGE_ROOT / "wiki"
+from canonforge.core.manifest import find_universe_root
+
+UNIVERSE_DIR = find_universe_root()
+DATA_DIR = UNIVERSE_DIR / "data"
+WIKI_DIR = UNIVERSE_DIR / "wiki"
 DB_PATH = DATA_DIR / "game_world.db"
 SCHEMA_FILE = DATA_DIR / "sql" / "schema.sql"
+if not SCHEMA_FILE.is_file():
+    SCHEMA_FILE = Path(__file__).resolve().parent.parent.parent / "data" / "sql" / "schema.sql"
 
 def clean_wikilinks(text: str) -> str:
     """Clean Obsidian wikilinks and markdown link syntax into readable plain text."""
@@ -45,12 +49,14 @@ def sanitize_fts_query(query: str) -> str:
             sanitized_tokens.append(tok)
     return " ".join(sanitized_tokens)
 
-SCHEMA_FILE = DATA_DIR / "sql" / "schema.sql"
-
 def get_schema_ddl() -> str:
-    """Load SQL DDL from schema.sql or fallback if missing."""
-    if SCHEMA_FILE.is_file():
-        return SCHEMA_FILE.read_text(encoding="utf-8")
+    """Load SQL DDL from universe schema.sql or bundled package fallback."""
+    p_universe = DATA_DIR / "sql" / "schema.sql"
+    if p_universe.is_file():
+        return p_universe.read_text(encoding="utf-8")
+    p_package = Path(__file__).resolve().parent.parent.parent / "data" / "sql" / "schema.sql"
+    if p_package.is_file():
+        return p_package.read_text(encoding="utf-8")
     return ""
 
 def get_connection() -> sqlite3.Connection:
@@ -318,7 +324,10 @@ def seed_database():
                 if h1_m:
                     title = h1_m.group(1).strip()
 
-            rel_path = str(md_file.relative_to(CONVERGENCE_DIR))
+            try:
+                rel_path = str(md_file.relative_to(UNIVERSE_DIR))
+            except Exception:
+                rel_path = str(md_file)
             index_fts(
                 entity_id=entity_id,
                 domain=domain_key,

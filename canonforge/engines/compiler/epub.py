@@ -7,8 +7,9 @@ import zipfile
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
-PACKAGE_ROOT = Path(__file__).resolve().parent.parent.parent
-CONVERGENCE_DIR = PACKAGE_ROOT
+from canonforge.core.manifest import find_universe_root
+
+UNIVERSE_DIR = find_universe_root()
 
 def markdown_to_html_body(md_text: str) -> str:
     """Lightweight converter from novel markdown to clean, standard XHTML."""
@@ -149,16 +150,16 @@ def build_epub(chapters: List[Dict[str, Any]], manifest: Optional[Dict[str, Any]
     # Resolve Cover Art Image
     cover_image_path = None
     if manifest and manifest.get("cover_image"):
-        cand = CONVERGENCE_DIR / manifest.get("cover_image")
+        cand = UNIVERSE_DIR / manifest.get("cover_image")
         if cand.exists():
             cover_image_path = cand
     if not cover_image_path:
         if "book-1" in book_dir_name:
-            cand = CONVERGENCE_DIR / "wiki/assets/cover.jpg"
+            cand = UNIVERSE_DIR / "wiki/assets/cover.jpg"
             if cand.exists():
                 cover_image_path = cand
         elif "book-2" in book_dir_name:
-            cand = CONVERGENCE_DIR / "wiki/assets/concepts/war/colossus/colossus-concept1.jpg"
+            cand = UNIVERSE_DIR / "wiki/assets/concepts/war/colossus/colossus-concept1.jpg"
             if cand.exists():
                 cover_image_path = cand
 
