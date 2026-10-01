@@ -1,0 +1,44 @@
+canonforge/cli/__init__.py
+  h_fcacc84ac57fba 2-5,8-16
+canonforge/cli/__main__.py
+  h_fcacc84ac57fba 2,4
+canonforge/cli/audit_cmd.py
+  h_fcacc84ac57fba 2-11,16,18-20,28-96,98-107,109,111-132,134-222,224-233
+canonforge/cli/dashboard.py
+  h_fcacc84ac57fba 2,4-5,9,11,14,34-37,39,41-47,77,83-85,89-90,104-105,108-203,210,215,239-259,263
+canonforge/cli/groups.py
+  h_fcacc84ac57fba 2-5,8,10-70,72-90,93-99
+canonforge/cli/main.py
+  h_fcacc84ac57fba 2-5,12-137,139-180,182
+canonforge/cli/new_cmd.py
+  h_fcacc84ac57fba 2-9,13-14,16-18,21-22,24-62,65-196,199-250,252-255,258-350,352-380
+canonforge/cli/skill_cmd.py
+  h_fcacc84ac57fba 2-8,13-15,17-65,68,70,72-77,80-108,110-116
+canonforge/engines/combat/cli.py
+  h_fcacc84ac57fba 45-46,57-64,66,78-84,86
+canonforge/engines/db/seeder.py
+  h_fcacc84ac57fba 327
+canonforge/engines/polish.py
+  h_fcacc84ac57fba 492-495,498
+canonforge/engines/travel.py
+  h_fcacc84ac57fba 223
+canonforge/universe_cli.py
+  h_fcacc84ac57fba 234-299,302
+pyproject.toml
+  h_fcacc84ac57fba 7,67,75
+tests/test_cli_features.py
+  h_fcacc84ac57fba 2,6-9,12-33,35-79,82
+uv.lock
+  h_fcacc84ac57fba 115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a535fff87b4bd4e90673b651083844a1733297be",
+  "prompts": {},
+  "humans": {
+    "h_fcacc84ac57fba": {
+      "author": "Cid <308343041+convergenceID@users.noreply.github.com>"
+    }
+  }
+}
