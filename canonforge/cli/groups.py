@@ -33,8 +33,8 @@ CAPABILITY_GROUPS: Dict[str, List[Tuple[str, str]]] = {
         ("prose", "Anti-slop and AI cadence linter (tricolons, filter words)"),
         ("continuity", "Character state, inventory, and trait continuity gate"),
         ("timeline", "Chronological progression and travel physics gate"),
-        ("secrets", "Information disclosure and dramatic irony tracking gate"),
         ("impact", "Narrative blast radius and plot point causality analyzer (Book 1-8)"),
+        ("consistency", "Plot point metadata drift, ghost characters, and causal DAG linter"),
     ],
     "WORLDBUILDING": [
         ("profile", "Character intelligence dossier (lore, RPG stats, invariants, social web)"),

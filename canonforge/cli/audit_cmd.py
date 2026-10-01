@@ -155,6 +155,17 @@ def run_chapter_audit(ch_file: Path) -> List[Dict[str, Any]]:
     except Exception:
         pass
 
+    # 5. Plot Consistency & Drift Audit
+    try:
+        from canonforge.engines import consistency
+        from canonforge.core.manifest import find_universe_root
+        u_root = find_universe_root()
+        alias_map = consistency.load_character_alias_map(u_root)
+        c_diags = consistency.audit_chapter_consistency(ch_file, alias_map=alias_map)
+        diagnostics.extend(c_diags)
+    except Exception:
+        pass
+
     return diagnostics
 
 def cmd_audit(args):

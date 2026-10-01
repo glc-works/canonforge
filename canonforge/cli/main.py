@@ -42,13 +42,27 @@ def _dispatch_impact(args):
     )
     impact.render_impact_report(res, output_format=getattr(args, "format", "text"))
 
+def _dispatch_consistency(args):
+    from canonforge.engines import consistency
+    u_root = Path(args.universe).resolve() if getattr(args, "universe", None) else None
+    res = consistency.run_consistency_audit(
+        universe_root=u_root,
+        chapter_file=getattr(args, "chapter", None) or None,
+        book_filter=getattr(args, "book", None),
+        series_filter=getattr(args, "series", None),
+        strict=getattr(args, "strict", False),
+        output_format=getattr(args, "format", "text")
+    )
+    if not res.get("success", False):
+        sys.exit(1)
+
 def _get_all_valid_commands() -> list:
     cmds = []
     for group_cmds in CAPABILITY_GROUPS.values():
         for cmd_name, _ in group_cmds:
             cmds.append(cmd_name)
     # Add common aliases
-    cmds.extend(["scaffold", "polish", "obsidian", "studio", "interactive"])
+    cmds.extend(["scaffold", "polish", "obsidian", "studio", "interactive", "consistency", "lint", "lint-consistency"])
     return sorted(list(set(cmds)))
 
 def build_parser() -> argparse.ArgumentParser:
@@ -193,6 +207,16 @@ def build_parser() -> argparse.ArgumentParser:
     p_impact.add_argument("--universe", "-u", help="Path to universe root")
     p_impact.set_defaults(func=_dispatch_impact)
 
+    # Plot Consistency & Metadata Drift Linter
+    p_cons = subparsers.add_parser("consistency", aliases=["lint", "lint-consistency"], help="Audit plot point metadata drift, ghost characters, and causal DAG")
+    p_cons.add_argument("chapter", nargs="?", default="", help="Optional chapter file or pattern to audit")
+    p_cons.add_argument("--book", "-b", help="Filter by book directory (e.g. book-01)")
+    p_cons.add_argument("--series", "-s", help="Filter by series slug (e.g. sun-sanctum)")
+    p_cons.add_argument("--strict", action="store_true", help="Fail on warnings as well as errors")
+    p_cons.add_argument("--format", choices=["text", "json"], default="text", help="Output format")
+    p_cons.add_argument("--universe", "-u", help="Path to universe root")
+    p_cons.set_defaults(func=_dispatch_consistency)
+
     # 3. AGENT
     p_skill = subparsers.add_parser("skill", help="Export agent skills and governance rules")
     skill_sub = p_skill.add_subparsers(dest="skill_action", help="Skill action")
@@ -322,6 +346,13 @@ def main():
         from canonforge.engines import rename
         sys.argv = [sys.argv[0], *sys.argv[2:]]
         rename.main()
+        return
+
+    # Plot Consistency & Drift Linter command
+    if first_arg in ("consistency", "lint", "lint-consistency"):
+        from canonforge.engines import consistency
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        consistency.main()
         return
 
     # Direct engine delegations
