@@ -1,0 +1,32 @@
+.github/ISSUE_TEMPLATE/bug_report.yml
+  h_fcacc84ac57fba 1-114
+.github/ISSUE_TEMPLATE/config.yml
+  h_fcacc84ac57fba 1-8
+.github/ISSUE_TEMPLATE/feature_request.yml
+  h_fcacc84ac57fba 1-55
+.github/PULL_REQUEST_TEMPLATE.md
+  h_fcacc84ac57fba 1-21
+CODE_OF_CONDUCT.md
+  h_fcacc84ac57fba 1-37
+CONTRIBUTING.md
+  h_fcacc84ac57fba 1-77
+README.md
+  h_fcacc84ac57fba 74-91,95-96,221,223-228,231
+okf_studio/cli.py
+  h_fcacc84ac57fba 87-98,373-374,381-387
+okf_studio/universe_cli.py
+  h_fcacc84ac57fba 91,103,108,113-114,119,126,135-139,145-148,152-164,182-183,188-231
+tests/test_cli.py
+  h_fcacc84ac57fba 6,15,48-60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a6f7f0fc870295109cae20ce487b95c71caf64b1",
+  "prompts": {},
+  "humans": {
+    "h_fcacc84ac57fba": {
+      "author": "Cid <308343041+convergenceID@users.noreply.github.com>"
+    }
+  }
+}
