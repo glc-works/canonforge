@@ -1,0 +1,164 @@
+canonforge/core/__init__.py
+  h_fcacc84ac57fba 1-26
+canonforge/core/diagnostics.py
+  h_fcacc84ac57fba 1-90
+canonforge/core/exceptions.py
+  h_fcacc84ac57fba 1-40
+canonforge/core/manifest.py
+  h_fcacc84ac57fba 1-60
+canonforge/data/sensory_dictionary.json
+  h_fcacc84ac57fba 3
+canonforge/data/sql/schema.sql
+  h_fcacc84ac57fba 1-284
+canonforge/data/templates/reader.html
+  h_fcacc84ac57fba 1,348-349
+canonforge/engines/combat/__init__.py
+  h_fcacc84ac57fba 1-35
+canonforge/engines/combat/cli.py
+  h_fcacc84ac57fba 1-81
+canonforge/engines/combat/fighter.py
+  h_fcacc84ac57fba 1-249
+canonforge/engines/combat/mechanics.py
+  h_fcacc84ac57fba 2,5-6
+canonforge/engines/combat/simulator.py
+  h_fcacc84ac57fba 1-147
+canonforge/engines/compiler/__init__.py
+  h_fcacc84ac57fba 1-28
+canonforge/engines/compiler/analytics.py
+  h_fcacc84ac57fba 1-57
+canonforge/engines/compiler/assembler.py
+  h_fcacc84ac57fba 1-232
+canonforge/engines/compiler/cli.py
+  h_fcacc84ac57fba 1-72
+canonforge/engines/compiler/epub.py
+  h_fcacc84ac57fba 2,5-6,8,10-11,60,157,294,296
+canonforge/engines/continuity.py
+  h_fcacc84ac57fba 4-6,23-29,31-32,35-56,58-87,91,100-122,124-144,146,151-152,164,173-176,180,182,184
+canonforge/engines/db/__init__.py
+  h_fcacc84ac57fba 1-45
+canonforge/engines/db/json_sync.py
+  h_fcacc84ac57fba 1-277
+canonforge/engines/db/query.py
+  h_fcacc84ac57fba 1-135
+canonforge/engines/db/scanner.py
+  h_fcacc84ac57fba 1-124
+canonforge/engines/db/seeder.py
+  h_fcacc84ac57fba 1-340
+canonforge/engines/db/sql_export.py
+  h_fcacc84ac57fba 1-485
+canonforge/engines/db/validator.py
+  h_fcacc84ac57fba 1-123
+canonforge/engines/dialogue.py
+  h_fcacc84ac57fba 4,126-138,142,161-165,261,316,348,367-375,398-402,447
+canonforge/engines/exporter/__init__.py
+  h_fcacc84ac57fba 1-21
+canonforge/engines/exporter/cli.py
+  h_fcacc84ac57fba 1-86
+canonforge/engines/exporter/epub.py
+  h_fcacc84ac57fba 1-164
+canonforge/engines/exporter/formatter.py
+  h_fcacc84ac57fba 1-118
+canonforge/engines/exporter/metadata.py
+  h_fcacc84ac57fba 1-72
+canonforge/engines/exporter/reader_html.py
+  h_fcacc84ac57fba 1-137
+canonforge/engines/init_db.py
+  h_fcacc84ac57fba 3,5-6,13-18,21,39
+canonforge/engines/metrics/__init__.py
+  h_fcacc84ac57fba 1-29
+canonforge/engines/metrics/cache.py
+  h_fcacc84ac57fba 1-59
+canonforge/engines/metrics/calculator.py
+  h_fcacc84ac57fba 2,8,10-14
+canonforge/engines/metrics/cli.py
+  h_fcacc84ac57fba 1-96
+canonforge/engines/metrics/registry.py
+  h_fcacc84ac57fba 1-179
+canonforge/engines/metrics/reporter.py
+  h_fcacc84ac57fba 1-173
+canonforge/engines/new_chapter.py
+  h_fcacc84ac57fba 3,26,31-34
+canonforge/engines/polish.py
+  h_fcacc84ac57fba 4,9-10,329,470
+canonforge/engines/pov.py
+  h_fcacc84ac57fba 3,126,151-164,209
+canonforge/engines/prep/__init__.py
+  h_fcacc84ac57fba 1-32
+canonforge/engines/prep/builder.py
+  h_fcacc84ac57fba 1-184
+canonforge/engines/prep/cli.py
+  h_fcacc84ac57fba 1-39
+canonforge/engines/prep/locator.py
+  h_fcacc84ac57fba 1-179
+canonforge/engines/prep/palettes.py
+  h_fcacc84ac57fba 1-125
+canonforge/engines/prep/prompt.py
+  h_fcacc84ac57fba 1-2
+canonforge/engines/prose.py
+  h_fcacc84ac57fba 3,5,274,294
+canonforge/engines/relations/__init__.py
+  h_fcacc84ac57fba 1-52
+canonforge/engines/relations/cli.py
+  h_fcacc84ac57fba 1-191
+canonforge/engines/relations/exporter.py
+  h_fcacc84ac57fba 1-111
+canonforge/engines/relations/graph.py
+  h_fcacc84ac57fba 1-244
+canonforge/engines/relations/matrix.py
+  h_fcacc84ac57fba 1-196
+canonforge/engines/relations/mutations.py
+  h_fcacc84ac57fba 2,6-10,100,198
+canonforge/engines/relations/timeline.py
+  h_fcacc84ac57fba 1-178
+canonforge/engines/schemas.py
+  h_fcacc84ac57fba 82
+canonforge/engines/secrets.py
+  h_fcacc84ac57fba 3,99
+canonforge/engines/sensory/__init__.py
+  h_fcacc84ac57fba 1-43
+canonforge/engines/sensory/dictionary.py
+  h_fcacc84ac57fba 1-288
+canonforge/engines/sensory/radar.py
+  h_fcacc84ac57fba 2-5,10-15,84-87,89,91-99,101-105,107-111,113-117,119,126,133,136,139,144-145,184,191,213,248-249,299,302,327,340-341,380,382-385,387,390,392-395,397,399-401,403
+canonforge/engines/sensory/reporter.py
+  h_fcacc84ac57fba 1-88
+canonforge/engines/sensory_dictionary.py
+  h_fcacc84ac57fba 2,4-5,7-11,13
+canonforge/engines/sync_db.py
+  h_fcacc84ac57fba 3,5-6,13-15,18-23,27-30,33
+canonforge/engines/timeline.py
+  h_fcacc84ac57fba 3,211,227
+canonforge/engines/toc.py
+  h_fcacc84ac57fba 5,128,157
+canonforge/engines/travel.py
+  h_fcacc84ac57fba 5,7,10-12,160,234,240,248
+canonforge/schemas/chapter.schema.json
+  h_fcacc84ac57fba 45
+canonforge/schemas/character.schema.json
+  h_fcacc84ac57fba 3,42-43,50,73,80,106
+canonforge/schemas/equipment.schema.json
+  h_fcacc84ac57fba 3
+canonforge/schemas/item.schema.json
+  h_fcacc84ac57fba 3
+canonforge/schemas/monster.schema.json
+  h_fcacc84ac57fba 3
+canonforge/schemas/quest.schema.json
+  h_fcacc84ac57fba 3
+canonforge/schemas/recipe.schema.json
+  h_fcacc84ac57fba 3
+canonforge/schemas/skill.schema.json
+  h_fcacc84ac57fba 3,42,69
+pyproject.toml
+  h_fcacc84ac57fba 7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ec5c3b5f0a0880e9b6660e9a64a481ba162cfb28",
+  "prompts": {},
+  "humans": {
+    "h_fcacc84ac57fba": {
+      "author": "Cid <308343041+convergenceID@users.noreply.github.com>"
+    }
+  }
+}
