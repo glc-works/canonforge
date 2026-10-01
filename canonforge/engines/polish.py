@@ -20,9 +20,10 @@ from pathlib import Path
 from typing import Dict, List, Tuple, Optional, Any, Set
 from collections import Counter
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-CONVERGENCE_DIR = SCRIPT_DIR.parent
-MANUSCRIPT_DIR = CONVERGENCE_DIR / "manuscript"
+from canonforge.core.manifest import find_universe_root
+
+UNIVERSE_DIR = find_universe_root()
+MANUSCRIPT_DIR = UNIVERSE_DIR / "manuscript"
 
 # Import existing engines
 try:
@@ -60,8 +61,6 @@ try:
     HAS_BN = True
 except ImportError:
     HAS_BN = False
-
-
 # ==============================================================================
 # RESOLVER
 # ==============================================================================
@@ -87,14 +86,14 @@ def resolve_draft_file(
         try:
             res = subprocess.run(
                 ["git", "status", "--porcelain", "manuscript/"],
-                cwd=str(CONVERGENCE_DIR),
+                cwd=str(UNIVERSE_DIR),
                 capture_output=True,
                 text=True
             )
             for line in res.stdout.splitlines():
                 parts = line.strip().split()
                 if len(parts) >= 2:
-                    p = CONVERGENCE_DIR / parts[-1]
+                    p = UNIVERSE_DIR / parts[-1]
                     if p.suffix == ".md" and "chapters" in str(p) and p.exists():
                         return p
         except Exception:
@@ -112,7 +111,7 @@ def resolve_draft_file(
     p = Path(query)
     if p.exists() and p.is_file():
         return p
-    p_conv = CONVERGENCE_DIR / query
+    p_conv = UNIVERSE_DIR / query
     if p_conv.exists() and p_conv.is_file():
         return p_conv
 

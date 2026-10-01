@@ -16,8 +16,10 @@ import argparse
 from pathlib import Path
 from typing import Dict, Any, List, Tuple
 
-CONVERGENCE_DIR = Path(__file__).resolve().parent.parent
-MANUSCRIPT_DIR = CONVERGENCE_DIR / "manuscript"
+from canonforge.core.manifest import find_universe_root
+
+UNIVERSE_DIR = find_universe_root()
+MANUSCRIPT_DIR = UNIVERSE_DIR / "manuscript"
 
 # ==============================================================================
 # 1. FORBIDDEN AI CLICHÉS & PURPLE SLOP LEXICON

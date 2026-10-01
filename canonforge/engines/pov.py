@@ -22,8 +22,10 @@ try:
 except ImportError:
     HAS_TABULATE = False
 
-CONVERGENCE_DIR = Path(__file__).resolve().parent.parent
-MANUSCRIPT_DIR = CONVERGENCE_DIR / "manuscript"
+from canonforge.core.manifest import find_universe_root
+
+UNIVERSE_DIR = find_universe_root()
+MANUSCRIPT_DIR = UNIVERSE_DIR / "manuscript"
 
 # Verbs declaring internal mental state (Forbidden for non-POV characters in 3rd-person limited)
 INTERNAL_STATE_VERBS = [

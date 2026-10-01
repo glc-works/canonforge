@@ -19,13 +19,14 @@ try:
 except ImportError:
     HAS_TABULATE = False
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-WORKSPACE_DIR = SCRIPT_DIR.parent
+from canonforge.core.manifest import find_universe_root
+
+WORKSPACE_DIR = find_universe_root()
 MANUSCRIPT_DIR = WORKSPACE_DIR / "manuscript"
 CHARACTERS_LORE_DIRS = [
-    WORKSPACE_DIR / "lore" / "characters",
     WORKSPACE_DIR / "wiki" / "terms" / "characters",
-    WORKSPACE_DIR / "wiki" / "characters"
+    WORKSPACE_DIR / "wiki" / "characters",
+    WORKSPACE_DIR / "lore" / "characters",
 ]
 
 # Configurable banned term / leak lexicon (loaded from workspace if present)

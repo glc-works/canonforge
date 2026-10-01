@@ -28,9 +28,10 @@ try:
 except ImportError:
     HAS_TABULATE = False
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-CONVERGENCE_DIR = SCRIPT_DIR.parent
-DATA_DIR = CONVERGENCE_DIR / "data"
+from canonforge.core.manifest import find_universe_root
+
+UNIVERSE_DIR = find_universe_root()
+DATA_DIR = UNIVERSE_DIR / "data"
 DB_PATH = DATA_DIR / "game_world.db"
 
 WEATHER_MODIFIERS = {

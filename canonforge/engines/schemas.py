@@ -23,10 +23,13 @@ try:
 except ImportError:
     HAS_JSONSCHEMA = False
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-CONVERGENCE_DIR = SCRIPT_DIR.parent
-MANUSCRIPT_DIR = CONVERGENCE_DIR / "manuscript"
-SCHEMA_FILE = CONVERGENCE_DIR / "schemas" / "chapter.schema.json"
+from canonforge.core.manifest import find_universe_root
+
+UNIVERSE_DIR = find_universe_root()
+MANUSCRIPT_DIR = UNIVERSE_DIR / "manuscript"
+SCHEMA_FILE = UNIVERSE_DIR / "schemas" / "chapter.schema.json"
+if not SCHEMA_FILE.is_file():
+    SCHEMA_FILE = Path(__file__).resolve().parent.parent / "schemas" / "chapter.schema.json"
 
 
 def validate_all_chapters():

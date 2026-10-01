@@ -13,8 +13,10 @@ import re
 import argparse
 from pathlib import Path
 
-CONVERGENCE_DIR = Path(__file__).resolve().parent.parent
-MANUSCRIPT_DIR = CONVERGENCE_DIR / "manuscript"
+from canonforge.core.manifest import find_universe_root
+
+UNIVERSE_DIR = find_universe_root()
+MANUSCRIPT_DIR = UNIVERSE_DIR / "manuscript"
 
 def slugify(text: str) -> str:
     text = text.lower().strip()
@@ -89,7 +91,7 @@ The morning broke over...
 """
 
     target_path.write_text(content.strip() + "\n", encoding="utf-8")
-    print(f"✅ Created chapter scaffold: {target_path.relative_to(CONVERGENCE_DIR)}")
+    print(f"✅ Created chapter scaffold: {target_path.relative_to(UNIVERSE_DIR)}")
     print(f"• Title: {args.title}")
     print(f"• Book: {args.book} (Act {args.act}, Chapter {args.chapter})")
     print(f"• POV: {args.pov}")

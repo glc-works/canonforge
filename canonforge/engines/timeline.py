@@ -22,11 +22,12 @@ try:
 except ImportError:
     HAS_YAML = False
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-CONVERGENCE_DIR = SCRIPT_DIR.parent
-MANUSCRIPT_DIR = CONVERGENCE_DIR / "manuscript"
-ROUTES_FILE = CONVERGENCE_DIR / "data" / "routes.json"
-DISTANCES_FILE = CONVERGENCE_DIR / "data" / "world_distances.yaml"
+from canonforge.core.manifest import find_universe_root
+
+UNIVERSE_DIR = find_universe_root()
+MANUSCRIPT_DIR = UNIVERSE_DIR / "manuscript"
+ROUTES_FILE = UNIVERSE_DIR / "data" / "routes.json"
+DISTANCES_FILE = UNIVERSE_DIR / "data" / "world_distances.yaml"
 
 class RouteNetwork:
     def __init__(self):
