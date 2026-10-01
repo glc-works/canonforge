@@ -1,0 +1,20 @@
+canonforge/cli/audit_cmd.py
+  h_fcacc84ac57fba 158-168
+canonforge/cli/groups.py
+  h_fcacc84ac57fba 37
+canonforge/cli/main.py
+  h_fcacc84ac57fba 45-58,65,210-219,351-357
+canonforge/engines/consistency.py
+  h_fcacc84ac57fba 1-489
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "38a03549483d3d33b3784e4200ab2ff17f2748b2",
+  "prompts": {},
+  "humans": {
+    "h_fcacc84ac57fba": {
+      "author": "Cid <308343041+convergenceID@users.noreply.github.com>"
+    }
+  }
+}
