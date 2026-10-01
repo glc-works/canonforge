@@ -1,0 +1,116 @@
+.github/workflows/ci.yml
+  h_fcacc84ac57fba 1-38
+.gitignore
+  h_fcacc84ac57fba 1-59
+LICENSE
+  h_fcacc84ac57fba 1-28
+README.md
+  h_fcacc84ac57fba 1-209
+examples/aetheria/manuscript/skies-of-iron/book-01/chapters/ch01-the-iron-skiff.md
+  h_fcacc84ac57fba 1-38
+examples/aetheria/manuscript/skies-of-iron/book-01/chapters/ch02-the-cloud-furnace.md
+  h_fcacc84ac57fba 1-42
+examples/aetheria/manuscript/skies-of-iron/book-01/toc.yaml
+  h_fcacc84ac57fba 1-20
+examples/aetheria/manuscript/skies-of-iron/series.yaml
+  h_fcacc84ac57fba 1-12
+examples/aetheria/universe.yaml
+  h_fcacc84ac57fba 1-39
+examples/aetheria/wiki/terms/characters/captain-orlov.md
+  h_fcacc84ac57fba 1-17
+examples/aetheria/wiki/terms/characters/lyra-valen.md
+  h_fcacc84ac57fba 1-17
+examples/aetheria/wiki/terms/factions/iron-guild.md
+  h_fcacc84ac57fba 1-10
+examples/aetheria/wiki/terms/places/high-spire.md
+  h_fcacc84ac57fba 1-10
+okf_studio/__init__.py
+  h_fcacc84ac57fba 1-10
+okf_studio/cli.py
+  h_fcacc84ac57fba 1-377
+okf_studio/data/sensory_dictionary.yaml
+  h_fcacc84ac57fba 1-8806
+okf_studio/engines/__init__.py
+  h_fcacc84ac57fba 1-3
+okf_studio/engines/combat.py
+  h_fcacc84ac57fba 1-653
+okf_studio/engines/compiler.py
+  h_fcacc84ac57fba 1-661
+okf_studio/engines/continuity.py
+  h_fcacc84ac57fba 1-347
+okf_studio/engines/dialogue.py
+  h_fcacc84ac57fba 1-476
+okf_studio/engines/exporter.py
+  h_fcacc84ac57fba 1-994
+okf_studio/engines/init_db.py
+  h_fcacc84ac57fba 1-780
+okf_studio/engines/metrics.py
+  h_fcacc84ac57fba 1-725
+okf_studio/engines/new_chapter.py
+  h_fcacc84ac57fba 1-98
+okf_studio/engines/polish.py
+  h_fcacc84ac57fba 1-504
+okf_studio/engines/pov.py
+  h_fcacc84ac57fba 1-232
+okf_studio/engines/prep.py
+  h_fcacc84ac57fba 1-670
+okf_studio/engines/prose.py
+  h_fcacc84ac57fba 1-315
+okf_studio/engines/relations.py
+  h_fcacc84ac57fba 1-1318
+okf_studio/engines/schemas.py
+  h_fcacc84ac57fba 1-105
+okf_studio/engines/secrets.py
+  h_fcacc84ac57fba 1-141
+okf_studio/engines/sensory.py
+  h_fcacc84ac57fba 1-750
+okf_studio/engines/sensory_dictionary.py
+  h_fcacc84ac57fba 1-718
+okf_studio/engines/sync_db.py
+  h_fcacc84ac57fba 1-1066
+okf_studio/engines/timeline.py
+  h_fcacc84ac57fba 1-251
+okf_studio/engines/toc.py
+  h_fcacc84ac57fba 1-166
+okf_studio/engines/travel.py
+  h_fcacc84ac57fba 1-282
+okf_studio/schemas/chapter.schema.json
+  h_fcacc84ac57fba 1-102
+okf_studio/schemas/character.schema.json
+  h_fcacc84ac57fba 1-121
+okf_studio/schemas/equipment.schema.json
+  h_fcacc84ac57fba 1-66
+okf_studio/schemas/item.schema.json
+  h_fcacc84ac57fba 1-54
+okf_studio/schemas/monster.schema.json
+  h_fcacc84ac57fba 1-75
+okf_studio/schemas/quest.schema.json
+  h_fcacc84ac57fba 1-64
+okf_studio/schemas/recipe.schema.json
+  h_fcacc84ac57fba 1-58
+okf_studio/schemas/series.schema.json
+  h_fcacc84ac57fba 1-27
+okf_studio/schemas/skill.schema.json
+  h_fcacc84ac57fba 1-77
+okf_studio/schemas/toc.schema.json
+  h_fcacc84ac57fba 1-44
+okf_studio/schemas/universe.schema.json
+  h_fcacc84ac57fba 1-46
+okf_studio/universe_cli.py
+  h_fcacc84ac57fba 1-166
+pyproject.toml
+  h_fcacc84ac57fba 1-71
+tests/test_cli.py
+  h_fcacc84ac57fba 1-49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1b3eef7644c5af33c73902b58dc2853e94dd2f01",
+  "prompts": {},
+  "humans": {
+    "h_fcacc84ac57fba": {
+      "author": "Cid <308343041+convergenceID@users.noreply.github.com>"
+    }
+  }
+}
