@@ -1,0 +1,24 @@
+canonforge/cli/groups.py
+  h_fcacc84ac57fba 38-39,55
+canonforge/cli/main.py
+  h_fcacc84ac57fba 172-192
+canonforge/engines/hooks.py
+  h_fcacc84ac57fba 1-121
+canonforge/engines/linker.py
+  h_fcacc84ac57fba 1-203
+canonforge/engines/scanner.py
+  h_fcacc84ac57fba 1-237
+tests/test_cli_features.py
+  h_fcacc84ac57fba 157-196
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d510d5e1d72dadf05204ae5c074f599831d3f66a",
+  "prompts": {},
+  "humans": {
+    "h_fcacc84ac57fba": {
+      "author": "Cid <308343041+convergenceID@users.noreply.github.com>"
+    }
+  }
+}
