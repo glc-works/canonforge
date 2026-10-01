@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-CONVERGENCE STUDIO: SECTION-LEVEL POV & HEAD-HOPPING INTEGRITY AUDITOR
+CANONFORGE STUDIO: SECTION-LEVEL POV & HEAD-HOPPING INTEGRITY AUDITOR
 ------------------------------------------------------------------------------
 Protects Deep Third-Person Limited POV across chapters and sections.
 1. Parses primary POV from frontmatter and section breaks: <!-- pov: Character -->
@@ -123,7 +123,7 @@ def audit_chapter_pov(file_path: Path) -> Dict[str, Any]:
     
     # 1. Parse frontmatter
     default_pov = "Unknown"
-    cast = ["Kazan", "Bryn", "Cairn", "Doran", "Ozun", "Vaelin", "Corin", "Lyra", "Lucian", "Tika", "Kaelen", "Sariel"]
+    cast = []
     
     if raw_text.startswith("---"):
         parts = raw_text.split("---", 2)
@@ -147,6 +147,20 @@ def audit_chapter_pov(file_path: Path) -> Dict[str, Any]:
             body_text = raw_text
     else:
         body_text = raw_text
+
+    # Dynamic fallback: scan lore/characters directory if no frontmatter characters specified
+    if not cast and file_path.is_file():
+        u_root = file_path.parent
+        for _ in range(5):
+            if (u_root / "universe.yaml").is_file():
+                break
+            u_root = u_root.parent
+        for char_dir in [u_root / "lore" / "characters", u_root / "wiki" / "terms" / "characters"]:
+            if char_dir.is_dir():
+                for cf in char_dir.glob("*.md"):
+                    first_name = cf.stem.split("-")[0].title()
+                    if first_name not in cast:
+                        cast.append(first_name)
 
     sections = split_sections(body_text, default_pov)
     all_violations = []
@@ -192,7 +206,7 @@ def print_pov_report(res: Dict[str, Any]):
         print()
 
 def main():
-    parser = argparse.ArgumentParser(description="Convergence Deep POV & Head-Hopping Auditor")
+    parser = argparse.ArgumentParser(description="CanonForge Deep POV & Head-Hopping Auditor")
     parser.add_argument("chapter", nargs="?", default="the-iron-on-the-anvil.md", help="Chapter file or slug")
     parser.add_argument("--all", action="store_true", help="Audit all manuscript chapters")
     args = parser.parse_args()

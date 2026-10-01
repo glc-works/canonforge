@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Convergence Quest Entity Schema (OKF v0.3)",
+  "title": "CanonForge Quest Entity Schema (OKF v0.3)",
   "type": "object",
   "required": ["okf_version", "title", "type", "id", "quest_tier", "giver", "location"],
   "properties": {

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Convergence Equipment Entity Schema (OKF v0.3)",
+  "title": "CanonForge Equipment Entity Schema (OKF v0.3)",
   "type": "object",
   "required": ["okf_version", "title", "type", "id", "equipment_type", "slot", "rarity"],
   "properties": {

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-CONVERGENCE STUDIO: EPISTEMIC STATE & SECRET TRACKING AUDITOR
+CANONFORGE STUDIO: EPISTEMIC STATE & SECRET TRACKING AUDITOR
 ------------------------------------------------------------------------------
 Protects narrative tension by verifying that plot secrets and revelations
 are not prematurely leaked or discussed by characters prior to their canonical
@@ -96,7 +96,7 @@ def audit_secrets_for_chapter(chapter_path: Path, secret_definitions: List[Dict[
     return violations
 
 def main():
-    parser = argparse.ArgumentParser(description="Convergence Epistemic State & Secret Tracking Auditor")
+    parser = argparse.ArgumentParser(description="CanonForge Epistemic State & Secret Tracking Auditor")
     parser.add_argument("chapter", nargs="?", help="Chapter file or slug to audit")
     parser.add_argument("--all", action="store_true", help="Audit all chapters across the manuscript")
     args = parser.parse_args()

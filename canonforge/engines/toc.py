@@ -2,7 +2,7 @@
 """
 audit_toc_integrity.py
 
-Deterministic Two-Way Integrity Gate for Convergence Manuscripts.
+Deterministic Two-Way Integrity Gate for CanonForge Manuscripts.
 Verifies that:
 1. (No Dangling References) Every chapter declared in toc.yaml exists on disk.
 2. (No Orphan Chapters) Every markdown file in chapters/ is declared in toc.yaml.
@@ -125,7 +125,7 @@ def audit_toc_integrity(verbose: bool = False) -> Tuple[int, List[str]]:
 
     # Output Summary
     print("\n" + "=" * 70)
-    print("CONVERGENCE MANUSCRIPT TOC & INTEGRITY AUDITOR")
+    print("CANONFORGE MANUSCRIPT TOC & INTEGRITY AUDITOR")
     print("=" * 70)
     print(f"• Total Series Audited   : {len(series_dirs)}")
     print(f"• Total Books Audited    : {total_books_checked}")
@@ -154,7 +154,7 @@ def audit_toc_integrity(verbose: bool = False) -> Tuple[int, List[str]]:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Deterministic Two-Way Integrity Gate for Convergence Manuscripts")
+    parser = argparse.ArgumentParser(description="Deterministic Two-Way Integrity Gate for CanonForge Manuscripts")
     parser.add_argument("--verbose", "-v", action="store_true", help="Show warnings and non-fatal details")
     args = parser.parse_args()
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-CONVERGENCE STUDIO: ANTI-SLOP & DEEP POV PROSE LINTER
+CANONFORGE STUDIO: ANTI-SLOP & DEEP POV PROSE LINTER
 ------------------------------------------------------------------------------
-Enforces the literary fiction standards of the Convergence Style Guide:
+Enforces the literary fiction standards of the CanonForge Style Guide:
   • Eliminates AI cliches, purple slop, and tricolon tropes
   • Flags filter words that break Deep 3rd-Person Limited POV
   • Detects dialogue adverb clutter in favor of subtext & action beats
@@ -271,7 +271,7 @@ def find_chapter_files(target: str) -> List[Path]:
     return sorted(files)
 
 def main():
-    parser = argparse.ArgumentParser(description="Convergence Anti-Slop & Deep POV Prose Linter")
+    parser = argparse.ArgumentParser(description="CanonForge Anti-Slop & Deep POV Prose Linter")
     parser.add_argument("target", nargs="?", default=None, help="Chapter markdown file or book slug")
     parser.add_argument("--book", help="Book slug to audit (e.g. the-sun-sanctum-apprentice)")
     parser.add_argument("--all-books", action="store_true", help="Audit all chapters across all books")
@@ -291,7 +291,7 @@ def main():
             print_audit_report(res, verbose=args.verbose)
 
         print("=" * 80)
-        print("CONVERGENCE BATCH PROSE PURITY SUMMARY")
+        print("CANONFORGE BATCH PROSE PURITY SUMMARY")
         print("=" * 80)
         for fname, sc, wc in scores:
             col = "🟢" if sc >= 90 else ("🟡" if sc >= 75 else "🔴")

@@ -79,7 +79,7 @@ def validate_all_chapters():
                     errors.append(f"{ch_path.name}: Missing required field '{req}'")
 
     print("\n" + "=" * 70)
-    print("CONVERGENCE CHAPTER FRONTMATTER SCHEMA VALIDATOR")
+    print("CANONFORGE CHAPTER FRONTMATTER SCHEMA VALIDATOR")
     print("=" * 70)
     print(f"• Total Chapters Audited : {total_validated}")
     print(f"• Schema Standard        : schemas/chapter.schema.json (OKF v0.3)")

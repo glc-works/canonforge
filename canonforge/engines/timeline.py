@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-CONVERGENCE STUDIO: CHRONOLOGY & TRAVEL PHYSICS GATE
+CANONFORGE STUDIO: CHRONOLOGY & TRAVEL PHYSICS GATE
 ------------------------------------------------------------------------------
 Enforces physical plausibility and temporal consistency across manuscript chapters:
 1. Shortest-path route distance computation using canonical routes.json network.
@@ -208,7 +208,7 @@ def audit_book_timeline(book_toc: Path, network: RouteNetwork) -> List[Dict[str,
     return violations
 
 def main():
-    parser = argparse.ArgumentParser(description="Convergence Chronology & Travel Physics Gate")
+    parser = argparse.ArgumentParser(description="CanonForge Chronology & Travel Physics Gate")
     parser.add_argument("--book", help="Specific book directory to audit")
     parser.add_argument("--all", action="store_true", help="Audit all books across manuscript")
     args = parser.parse_args()
@@ -224,7 +224,7 @@ def main():
     total_chapters = 0
 
     print("\n" + "=" * 80)
-    print("CONVERGENCE CHRONOLOGY & TRAVEL PHYSICS GATE")
+    print("CANONFORGE CHRONOLOGY & TRAVEL PHYSICS GATE")
     print("=" * 80)
     print(f"• Monitored Route Nodes: {len(network.graph)}")
     print(f"• Location Aliases Active: {len(network.location_aliases)}")

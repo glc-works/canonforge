@@ -42,7 +42,7 @@
     },
     "universe": {
       "type": "string",
-      "default": "convergence"
+      "default": "canonforge"
     },
     "series": {
       "type": "string"

@@ -2,21 +2,16 @@
 """
 travel_planner.py
 
-Authoritative Spatial Travel & Logistics Engine for Convergence Studio.
+Spatial Travel & Logistics Engine for CanonForge.
 Calculates overland distances, transit durations, weather impacts, and logistical
-requirements across Oryn's 29 canonical locations using SQLite game_world.db.
+requirements across universe locations using SQLite game_world.db.
 
 Features:
-1. Shortest path graph search (Dijkstra) between any two places in Oryn.
-2. Mode-specific travel calculations: Foot, Mount (Horse/Steel-Hound), Crawler, Glider.
-3. Weather and seasonal modifiers (Winter Blizzard 1.5x, Mud/Rain 1.25x).
+1. Shortest path graph search (Dijkstra) between any two places in the universe.
+2. Mode-specific travel calculations: Foot, Mount, Crawler, Glider.
+3. Weather and seasonal modifiers.
 4. Supply calculation: Rations (lbs), Water (quarts), and Camp Rest Stops.
 5. Generates narrative-ready travel log snippets for authors.
-
-Usage:
-    uv run scripts/travel_planner.py --from "Outpost Nine" --to "The Broken Cog"
-    uv run scripts/travel_planner.py --from place_outpost_nine --to place_mist_hollow --mode foot --weather blizzard
-    uv run scripts/travel_planner.py --list
 """
 
 import sys
@@ -162,7 +157,7 @@ def format_travel_plan(conn: sqlite3.Connection, start_info: Tuple[str, str, int
     camps_needed = int(travel_days) if adjusted_hours > 8.0 else 0
 
     print("\n" + "=" * 75)
-    print(f"CONVERGENCE EXPEDITION LOGISTICS PLANNER")
+    print(f"CANONFORGE EXPEDITION LOGISTICS PLANNER")
     print("=" * 75)
     print(f"• Origin       : {start_name} ({start_id})")
     print(f"• Destination  : {end_name} ({end_id})")
@@ -236,13 +231,13 @@ def list_all_places(conn: sqlite3.Connection):
     print("=" * 75 + "\n")
 
 def main():
-    parser = argparse.ArgumentParser(description="Convergence Frontier Geography & Travel Logistics Planner")
+    parser = argparse.ArgumentParser(description="CanonForge Frontier Geography & Travel Logistics Planner")
     parser.add_argument("--from", dest="from_loc", help="Departure location (name or place_id)")
     parser.add_argument("--to", dest="to_loc", help="Destination location (name or place_id)")
     parser.add_argument("--mode", default="mount", choices=["foot", "mount", "crawler", "glider"], help="Transport mode")
     parser.add_argument("--weather", default="clear", choices=["clear", "rain", "blizzard", "ash_storm"], help="Weather condition")
     parser.add_argument("--party", type=int, default=2, help="Number of travelers in party")
-    parser.add_argument("--list", action="store_true", help="List all 29 places in Oryn")
+    parser.add_argument("--list", action="store_true", help="List all places registered in the active universe")
     args = parser.parse_args()
 
     conn = get_db()
@@ -250,7 +245,7 @@ def main():
     if args.list or not args.from_loc or not args.to_loc:
         list_all_places(conn)
         if not args.from_loc or not args.to_loc:
-            print("💡 Usage Example: uv run scripts/travel_planner.py --from 'Outpost Nine' --to 'Mist Hollow' --mode mount --weather blizzard\n")
+            print("💡 Usage Example: uv run scripts/travel_planner.py --from 'River Crossing' --to 'Mist Hollow' --mode mount --weather blizzard\n")
             conn.close()
             return
 

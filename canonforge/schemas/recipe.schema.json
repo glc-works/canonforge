@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Convergence Crafting Recipe Schema (OKF v0.3)",
+  "title": "CanonForge Crafting Recipe Schema (OKF v0.3)",
   "type": "object",
   "required": ["okf_version", "title", "type", "id", "output_item", "output_quantity", "required_station", "ingredients"],
   "properties": {

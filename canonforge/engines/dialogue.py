@@ -1,24 +1,9 @@
-#!/usr/bin/env python3
 """
 play_dialogue.py
 
-Authoritative Interactive Ink Story & Dialogue Runner for Convergence Studio.
+Authoritative Interactive Ink Story & Dialogue Runner for CanonForge Studio.
 Parses and plays Inkle Ink (.ink) dialogue trees in the terminal, validates all
 story branching pathways, and can export interactive HTML visual novel players.
-
-Features:
-1. Native Python Ink parser supporting:
-   - Knots (=== knot ===), includes (INCLUDE globals.ink), diverts (-> target, -> END)
-   - Story variables (VAR x = val, ~ x = val)
-   - Choice branches (* [choice text], + [choice text])
-2. Terminal Interactive Mode: Colorized speaker text, live variable HUD, and branch selection.
-3. Automated Path Walker (--test): Deterministically explores all dialogue branches.
-4. Standalone HTML Visual Novel Exporter (--export-html): Generates self-contained interactive web player.
-
-Usage:
-    uv run scripts/play_dialogue.py --file dialogue/stone-child-the-cut.ink
-    uv run scripts/play_dialogue.py --file dialogue/stone-child-the-cut.ink --test
-    uv run scripts/play_dialogue.py --file dialogue/stone-child-the-cut.ink --export-html
 """
 
 import sys
@@ -138,10 +123,23 @@ class InkStory:
             # Normal prose / speaker line
             current_knot.lines.append(line)
 
+ANSI_COLORS = [
+    "\033[96m", # Cyan
+    "\033[93m", # Yellow
+    "\033[91m", # Red
+    "\033[92m", # Green
+    "\033[95m", # Magenta
+    "\033[94m", # Blue
+]
+
+def get_speaker_color(speaker: str) -> str:
+    idx = sum(ord(c) for c in speaker) % len(ANSI_COLORS)
+    return ANSI_COLORS[idx]
+
 def play_terminal(story: InkStory):
     """Interactive CLI visual novel play session."""
     print("\n" + "=" * 75)
-    print(f"CONVERGENCE INK INTERACTIVE STORY ENGINE: {story.root_file.name}")
+    print(f"CANONFORGE INK INTERACTIVE STORY ENGINE: {story.root_file.name}")
     print("=" * 75)
 
     current_knot_name = story.start_knot
@@ -160,15 +158,11 @@ def play_terminal(story: InkStory):
 
         # Display lines
         for line in knot.lines:
-            # Colorize speaker dialogue if applicable
-            if line.startswith("TIKA:"):
-                print(f"\033[96m{line}\033[0m") # Cyan
-            elif line.startswith("KAZAN:"):
-                print(f"\033[93m{line}\033[0m") # Yellow
-            elif line.startswith("CAIRN:"):
-                print(f"\033[91m{line}\033[0m") # Red
-            elif line.startswith("BRYN:"):
-                print(f"\033[92m{line}\033[0m") # Green
+            # Colorize speaker dialogue dynamically if speaker tag matches
+            match = re.match(r"^([A-Z0-9_\-\s]{2,20}):\s*(.*)$", line)
+            if match:
+                color = get_speaker_color(match.group(1).strip())
+                print(f"{color}{line}\033[0m")
             else:
                 print(f"  {line}")
 
@@ -264,17 +258,13 @@ def export_html_player(story: InkStory, output_path: Path):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Convergence: {story.root_file.stem} (Interactive Dialogue)</title>
+    <title>CanonForge: {story.root_file.stem} (Interactive Dialogue)</title>
     <style>
         :root {{
             --bg: #0f1117;
             --card: #181b26;
             --text: #e6edf3;
             --accent: #d29922;
-            --tika: #58a6ff;
-            --kazan: #f0883e;
-            --cairn: #ff7b72;
-            --bryn: #7ee787;
             --border: #30363d;
         }}
         body {{
@@ -323,10 +313,7 @@ def export_html_player(story: InkStory, output_path: Path):
             margin-bottom: 12px;
             animation: fadeIn 0.3s ease;
         }}
-        .tika {{ color: var(--tika); font-weight: bold; }}
-        .kazan {{ color: var(--kazan); font-weight: bold; }}
-        .cairn {{ color: var(--cairn); font-weight: bold; }}
-        .bryn {{ color: var(--bryn); font-weight: bold; }}
+        .speaker {{ font-weight: bold; }}
         .prose {{ color: #c9d1d9; font-style: italic; }}
         .choices {{
             display: flex;
@@ -358,7 +345,7 @@ def export_html_player(story: InkStory, output_path: Path):
 </head>
 <body>
     <div class="container">
-        <h1>Convergence Story Player: {story.root_file.stem}</h1>
+        <h1>CanonForge Story Player: {story.root_file.stem}</h1>
         <div class="hud" id="hud">Loading story state...</div>
         <div class="dialogue-log" id="log"></div>
         <div class="choices" id="choices"></div>
@@ -375,6 +362,15 @@ def export_html_player(story: InkStory, output_path: Path):
                 .filter(([k]) => !k.startsWith("scene"))
                 .map(([k, v]) => `<span><strong>${{k}}</strong>: ${{v}}</span>`);
             hud.innerHTML = items.join(" • ");
+        }}
+
+        function getSpeakerColor(speaker) {{
+            let hash = 0;
+            for (let i = 0; i < speaker.length; i++) {{
+                hash = speaker.charCodeAt(i) + ((hash << 5) - hash);
+            }}
+            const hue = Math.abs(hash) % 360;
+            return `hsl(${{hue}}, 75%, 70%)`;
         }}
 
         function renderKnot(knotName) {{
@@ -399,14 +395,11 @@ def export_html_player(story: InkStory, output_path: Path):
             knot.lines.forEach(l => {{
                 const div = document.createElement("div");
                 div.className = "line";
-                if (l.startsWith("TIKA:")) {{
-                    div.innerHTML = `<span class="tika">${{l}}</span>`;
-                }} else if (l.startsWith("KAZAN:")) {{
-                    div.innerHTML = `<span class="kazan">${{l}}</span>`;
-                }} else if (l.startsWith("CAIRN:")) {{
-                    div.innerHTML = `<span class="cairn">${{l}}</span>`;
-                }} else if (l.startsWith("BRYN:")) {{
-                    div.innerHTML = `<span class="bryn">${{l}}</span>`;
+                const match = l.match(/^([A-Z0-9_\\-\\s]{{2,20}}):\\s*(.*)$/);
+                if (match) {{
+                    const speaker = match[1].trim();
+                    const color = getSpeakerColor(speaker);
+                    div.innerHTML = `<span class="speaker" style="color: ${{color}}">${{l}}</span>`;
                 }} else {{
                     div.className = "line prose";
                     div.textContent = l;
@@ -451,7 +444,7 @@ def export_html_player(story: InkStory, output_path: Path):
     print(f"   Size: {output_path.stat().st_size / 1024:.1f} KB (Self-contained, opens in any web browser)")
 
 def main():
-    parser = argparse.ArgumentParser(description="Convergence Interactive Ink Dialogue Player")
+    parser = argparse.ArgumentParser(description="CanonForge Interactive Ink Dialogue Player")
     parser.add_argument("--file", default="dialogue/stone-child-the-cut.ink", help="Path to .ink dialogue file")
     parser.add_argument("--test", action="store_true", help="Automated graph traversal and reachability test")
     parser.add_argument("--export-html", action="store_true", help="Export standalone interactive HTML player")

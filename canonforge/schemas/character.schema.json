@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Convergence Character Entity Schema (OKF v0.3)",
+  "title": "CanonForge Character Entity Schema (OKF v0.3)",
   "type": "object",
   "required": ["okf_version", "title", "type", "id", "birth_date"],
   "properties": {
@@ -39,15 +39,15 @@
     "faction": {
       "type": "string",
       "enum": [
-        "Aurei",
-        "Korvath",
+        "Human",
+        "Cyborg",
         "Valen",
         "The Syndicate",
         "Animus",
         "Neutral",
         "Lawless",
         "Unassigned",
-        "Wild / Hybrid (Aurei-Valen)"
+        "Wild / Hybrid"
       ]
     },
     "house": {
@@ -70,14 +70,14 @@
     "birth_date": {
       "type": "string",
       "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
-      "description": "Standard Anno Oryn calendar date in YYYY-MM-DD format"
+      "description": "Standard in-world calendar date in YYYY-MM-DD format"
     },
     "birthplace": {
       "type": "string"
     },
     "forged": {
       "type": "boolean",
-      "description": "Indicates whether the character has undergone the Korvath cybernetic soul excision"
+      "description": "Indicates whether the character has undergone cybernetic alteration"
     },
     "strength": {
       "type": "integer",
@@ -103,7 +103,7 @@
       "type": "integer",
       "minimum": 0,
       "maximum": 30,
-      "description": "Spiritual energy affinity (0 for Korvath)"
+      "description": "Spiritual or magic energy affinity"
     },
     "system_affinity": {
       "type": "integer",

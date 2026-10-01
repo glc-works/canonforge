@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Convergence Bestiary Entity Schema (OKF v0.3)",
+  "title": "CanonForge Bestiary Entity Schema (OKF v0.3)",
   "type": "object",
   "required": ["okf_version", "title", "type", "id", "classification", "origin", "rarity", "element"],
   "properties": {

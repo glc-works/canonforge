@@ -1,24 +1,13 @@
-#!/usr/bin/env python3
 """
 unified_polish.py
 
-Convergence Studio: Unified Single-Pass Literary Reviewer & Polish Suite (OKF v0.3).
+CanonForge Studio: Unified Single-Pass Literary Reviewer & Polish Suite (OKF v0.3).
 Executes single-pass multi-engine evaluation across:
 1. Pacing & Telemetry (Word counts, sentence rhythm, reading time)
 2. Anti-Slop & Deep POV (AI clichés, filter words, adverbs, tricolons)
 3. 5-Senses Sensory Radar (Four-Sense Rule across 600-word windows)
-4. Biometric Invariants & Fact Checking (Scars, eyes, weapons, animus bonds)
-5. Canon Leak Guard (Zero modern/Earth or HP source terms)
-
-Outputs a comprehensive Literary Health Scorecard (/10) and prioritized
-line-by-line rewrite patch suggestions.
-
-Usage:
-    ./ax polish
-    ./ax polish ch01-the-river-pebble.md
-    ./ax polish the-cut.md
-    ./ax polish ch21-the-emancipation-of-the-hearth-kin.md
-    ./ax polish --json ch01
+4. Biometric Invariants & Fact Checking (Scars, eyes, weapons, bonds)
+5. Canon Leak Guard (Zero modern/Earth terms)
 """
 
 import sys
@@ -337,7 +326,7 @@ def run_single_pass_audit(file_path: Path) -> Dict[str, Any]:
             "type": "Canon Leak",
             "issue": f"Forbidden source term: {lk['leak']}",
             "snippet": lk["snippet"],
-            "suggestion": "Replace immediately with Oryn in-world equivalent."
+            "suggestion": "Replace immediately with the universe in-world equivalent."
         })
 
     # 2. Invariants
@@ -478,7 +467,7 @@ def print_polish_report(report: Dict[str, Any], verbose: bool = False):
 # ==============================================================================
 
 def main():
-    parser = argparse.ArgumentParser(description="Convergence Studio: Unified Single-Pass Literary Reviewer")
+    parser = argparse.ArgumentParser(description="CanonForge Studio: Unified Single-Pass Literary Reviewer")
     parser.add_argument("target", nargs="?", help="Book number/slug, draft path, or query (default: active modified draft)")
     parser.add_argument("chapter", nargs="?", help="Chapter number, slug, or title (when target is a book)")
     parser.add_argument("--json", "-j", action="store_true", help="Output raw JSON analysis")

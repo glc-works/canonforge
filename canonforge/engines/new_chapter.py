@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-CONVERGENCE STUDIO: CHAPTER SCAFFOLD GENERATOR
+CANONFORGE STUDIO: CHAPTER SCAFFOLD GENERATOR
 ------------------------------------------------------------------------------
 Generates standardized OKF v0.3 chapter markdown files with valid YAML
 frontmatter, SSOT metadata, and authoring guidelines to ensure zero-friction
@@ -23,15 +23,15 @@ def slugify(text: str) -> str:
     return text.strip("-")
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate a standardized Convergence novel chapter scaffold.")
+    parser = argparse.ArgumentParser(description="Generate a standardized CanonForge novel chapter scaffold.")
     parser.add_argument("--book", required=True, help="Book slug (e.g. the-sun-sanctum-disciple)")
     parser.add_argument("--act", type=int, required=True, help="Act number (1, 2, 3, 4)")
     parser.add_argument("--chapter", type=int, required=True, help="Chapter number (1..25)")
     parser.add_argument("--title", required=True, help="Chapter title")
-    parser.add_argument("--pov", default="Vaelin of Mist-Hollow", help="POV character name")
-    parser.add_argument("--setting", default="High Sanctum", help="Primary setting/location")
-    parser.add_argument("--timeline", default="1068 AO", help="Timeline anchor")
-    parser.add_argument("--characters", nargs="*", default=["Vaelin of Mist-Hollow", "Corin Solen", "Lyra"], help="Characters present")
+    parser.add_argument("--pov", default="Protagonist", help="POV character name")
+    parser.add_argument("--setting", default="Primary Location", help="Primary setting/location")
+    parser.add_argument("--timeline", default="Year 1", help="Timeline anchor")
+    parser.add_argument("--characters", nargs="*", default=["Protagonist"], help="Characters present")
     parser.add_argument("--overwrite", action="store_true", help="Overwrite if file exists")
 
     args = parser.parse_args()

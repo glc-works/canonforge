@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Convergence Skill Entity Schema (OKF v0.3)",
+  "title": "CanonForge Skill Entity Schema (OKF v0.3)",
   "type": "object",
   "required": ["okf_version", "title", "type", "id", "job_path", "skill_tier", "resource_pool"],
   "properties": {
@@ -39,7 +39,7 @@
     "resource_pool": {
       "type": "string",
       "enum": ["SP", "FP", "Heat"],
-      "description": "SP = Stamina Points (universal), FP = Force Points (spirit), Heat = Overheat threshold (Korvath)"
+      "description": "SP = Stamina Points (universal), FP = Force Points (spirit), Heat = Overheat threshold (Mechanical/Tech)"
     },
     "resource_cost": {
       "type": "integer",
@@ -66,7 +66,7 @@
       "type": "array",
       "items": {
         "type": "string",
-        "enum": ["Aurei", "Valen", "Korvath"]
+        "enum": ["Warrior", "Mage", "Engineer"]
       }
     },
     "labels": {
