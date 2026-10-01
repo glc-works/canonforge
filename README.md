@@ -71,13 +71,29 @@ status: "completed"
 
 ### 1. Installation
 
+Choose your preferred package manager:
+
+#### Option A: Homebrew (macOS / Linux)
 ```bash
-# Clone the repository
+brew tap glc-works/tap
+brew install okf
+```
+
+#### Option B: `uv` / `uvx` by Astral (Recommended for fast CLI / Python)
+```bash
+# Run instantly without installing anything:
+uvx --from git+https://github.com/glc-works/okf-studio.git okf --help
+
+# Or install globally in an isolated sandbox:
+uv tool install git+https://github.com/glc-works/okf-studio.git
+```
+
+#### Option C: From Source (Developers & Contributors)
+```bash
 git clone https://github.com/glc-works/okf-studio.git
 cd okf-studio
-
-# Install in editable mode
-pip install -e .
+uv venv && source .venv/bin/activate
+uv pip install -e ".[dev]"
 ```
 
 ### 2. Discover Registered Universes
@@ -202,8 +218,14 @@ Included in `examples/aetheria/` is a complete, self-contained public demo unive
 
 ---
 
-## 🤝 Contributing
+## 🤝 Community & Contributing
 
-Contributions are welcome! Please open an issue or pull request on [GitHub](https://github.com/glc-works/okf-studio).
+Contributions are welcome from authors, editors, and software engineers alike!
+
+- **[Contributing Guide](CONTRIBUTING.md)**: Development setup with `uv`, architecture overview, and test instructions.
+- **[Code of Conduct](CODE_OF_CONDUCT.md)**: Community standards and pledge.
+- **[Report a Bug](https://github.com/glc-works/okf-studio/issues/new?template=bug_report.yml)**: Submit structured bug reports with chapter snippets.
+- **[Request a Feature](https://github.com/glc-works/okf-studio/issues/new?template=feature_request.yml)**: Propose new sensory engines, dictionary expansion, or editor integrations.
 
 Built with passion by **[GLC Works](https://github.com/glc-works)** for storytellers everywhere.
+

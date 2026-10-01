@@ -1,0 +1,114 @@
+name: 🐛 Bug Report
+description: Report a bug, crash, or unexpected behavior in OKF Studio
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue in OKF Studio! Please provide as much context as possible.
+        
+        > **Author IP Note:** Never paste entire private novels or proprietary trade secrets. A minimal 2-paragraph sample or reproducible chapter is sufficient.
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Which component or engine is affected?
+      description: Select the sub-engine where you encountered the bug.
+      options:
+        - "CLI Orchestrator (`okf ...`)"
+        - "Sensory Radar (`okf sensory`)"
+        - "Deep POV Auditor (`okf pov`)"
+        - "Prose Anti-Slop Linter (`okf prose`)"
+        - "TOC & Manifest Gate (`okf verify`)"
+        - "Compiler & Exporter (`okf compile / export`)"
+        - "Packaging / Installation (Brew / uv / pip)"
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: OKF Studio Version
+      description: Run `okf --version` and paste the output.
+      placeholder: "e.g. 0.3.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: runner
+    attributes:
+      label: Installation / Execution Method
+      description: How are you running OKF Studio?
+      options:
+        - "uv / uvx (Astral)"
+        - "Homebrew (brew install glc-works/tap/okf)"
+        - "pipx / uv tool"
+        - "Local clone & virtualenv"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      options:
+        - "macOS (Apple Silicon - M1/M2/M3/M4)"
+        - "macOS (Intel)"
+        - "Linux (Ubuntu / Debian)"
+        - "Linux (Arch / Fedora / other)"
+        - "Windows (WSL2)"
+        - "Windows (Native)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description of the Bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal Reproducible Example
+      description: Provide a minimal markdown chapter snippet or steps to reproduce the issue.
+      render: markdown
+      placeholder: |
+        ---
+        chapter: 1
+        title: "Test Chapter"
+        pov: "Character Name"
+        ---
+        Prose paragraph here...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs Actual Behavior
+      description: What did you expect to happen, and what actually happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Terminal Output / Error Traceback
+      description: Paste any error messages or tracebacks from running `okf` with `--traceback` or `-v`.
+      render: shell
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Author Safety & Invariants
+      options:
+        - label: I have verified this bug against the latest version of OKF Studio.
+          required: true
+        - label: I confirm this issue does not leak unreleased private creative manuscripts.
+          required: true

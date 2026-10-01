@@ -84,6 +84,18 @@ def _load_universe_meta(u_dir: Path) -> Optional[Dict[str, Any]]:
             meta = yaml.safe_load(raw_text) or {}
         except Exception:
             pass
+    else:
+        # Regex fallback for pure standard library environments
+        m_id = re.search(r'universe_id:\s*["\']?([^"\']+)["\']?', raw_text)
+        if m_id:
+            meta["universe_id"] = m_id.group(1).strip()
+        m_name = re.search(r'display_name:\s*["\']?([^"\']+)["\']?', raw_text)
+        if m_name:
+            meta["display_name"] = m_name.group(1).strip()
+        m_sensory = re.search(r'sensory_profile:\s*["\']?([^"\']+)["\']?', raw_text)
+        if m_sensory:
+            meta["sensory_profile"] = m_sensory.group(1).strip()
+
 
     ms_dir = u_dir / "manuscript"
     series_count = 0
@@ -358,13 +370,20 @@ def main():
     p_stats = subparsers.add_parser("stats", help="Display workspace prose and chapter statistics")
     p_stats.set_defaults(func=cmd_stats)
 
-    # scaffold
-    p_scaffold = subparsers.add_parser("scaffold", help="Scaffold a new universe directory")
+    # scaffold / init
+    p_scaffold = subparsers.add_parser("scaffold", aliases=["init"], help="Scaffold a new universe directory")
     p_scaffold.add_argument("slug", help="Slug/Folder name for the universe (e.g. aetheria, neon-city)")
     p_scaffold.add_argument("--title", help="Display title (e.g. 'Aetheria: Skies of Iron')")
     p_scaffold.add_argument("--genre", help="Universe genre (e.g. 'Cyberpunk', 'Space Opera')")
     p_scaffold.add_argument("--sensory-profile", help="Default sensory profile")
     p_scaffold.set_defaults(func=cmd_scaffold)
+
+    # If first argument is an author experience command, forward to universe_cli
+    author_commands = {"sensory", "pov", "prose", "polish", "thesaurus"}
+    if len(sys.argv) > 1 and sys.argv[1] in author_commands:
+        from okf_studio import universe_cli
+        universe_cli.main()
+        return
 
     args, unknown = parser.parse_known_args()
     if not args.subcommand:

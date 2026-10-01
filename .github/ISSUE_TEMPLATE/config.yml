@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/glc-works/okf-studio/discussions
+    about: Ask questions, share writing workflows, or discuss novel craft with the community.
+  - name: Security & IP Protection Policy
+    url: https://github.com/glc-works/okf-studio/security/policy
+    about: Report potential security vulnerabilities or IP protection concerns privately.

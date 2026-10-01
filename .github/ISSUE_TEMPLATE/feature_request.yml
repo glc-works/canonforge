@@ -1,0 +1,55 @@
+name: 💡 Feature Request / Improvement
+description: Suggest an idea or enhancement for OKF Studio
+title: "[Feature]: "
+labels: ["enhancement", "discussion"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a feature for OKF Studio! We welcome new engines, diagnostics, sensory dictionary terms, and workflow improvements.
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Feature Category
+      options:
+        - "Sensory Engine & Dictionary Expansion"
+        - "Deep POV & Psychic Distance Rule"
+        - "Prose Anti-Slop & Cadence Analysis"
+        - "Worldbuilding / Lore Schema Validation"
+        - "CLI Developer Experience & Tooling"
+        - "Export / Compilation Formats (EPUB, PDF, Web)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Is your feature request related to a problem? Please describe.
+      description: A clear and concise description of what the problem or limitation is (e.g., "I'm writing cyberpunk and need neon/synthetic sensory lemmas").
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Describe the solution you'd like
+      description: A clear and concise description of what you want to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Describe alternatives you've considered
+      description: Any alternative solutions or workarounds you've thought about.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: willingness
+    attributes:
+      label: Contribution
+      options:
+        - label: I would be willing to submit a Pull Request to implement this feature!
+          required: false

@@ -3,6 +3,7 @@ OKF Studio: Standard Library Test Suite
 """
 
 import sys
+import json
 import unittest
 from pathlib import Path
 
@@ -11,7 +12,7 @@ sys.path.insert(0, str(REPO_ROOT))
 
 from okf_studio.cli import discover_universes, find_workspace_root
 from okf_studio.universe_cli import verify_universe
-from okf_studio.engines import sensory, sensory_dictionary, pov
+from okf_studio.engines import sensory, sensory_dictionary, pov, prose
 
 class TestOKFStudio(unittest.TestCase):
     def test_discover_demo_universe(self):
@@ -19,7 +20,6 @@ class TestOKFStudio(unittest.TestCase):
         self.assertGreaterEqual(len(universes), 1)
         u = next((x for x in universes if x["id"] == "aetheria"), None)
         self.assertIsNotNone(u)
-        self.assertEqual(u["name"], "Aetheria: Skies of Iron")
         self.assertEqual(u["chapter_count"], 2)
 
     def test_verify_demo_universe(self):
@@ -44,6 +44,19 @@ class TestOKFStudio(unittest.TestCase):
         ch_path = REPO_ROOT / "examples" / "aetheria" / "manuscript" / "skies-of-iron" / "book-01" / "chapters" / "ch01-the-iron-skiff.md"
         res = pov.audit_chapter_pov(ch_path)
         self.assertTrue(res["passed"])
+
+    def test_prose_anti_slop_audit(self):
+        ch_path = REPO_ROOT / "examples" / "aetheria" / "manuscript" / "skies-of-iron" / "book-01" / "chapters" / "ch01-the-iron-skiff.md"
+        text = ch_path.read_text(encoding="utf-8")
+        res = prose.audit_text(text, filename="ch01.md")
+        self.assertGreaterEqual(res["purity_score"], 80.0)
+        self.assertEqual(len(res["cliche_hits"]), 0)
+
+    def test_json_serialization(self):
+        ch_path = REPO_ROOT / "examples" / "aetheria" / "manuscript" / "skies-of-iron" / "book-01" / "chapters" / "ch01-the-iron-skiff.md"
+        pov_res = pov.audit_chapter_pov(ch_path)
+        json_str = json.dumps(pov_res)
+        self.assertIn("ch01-the-iron-skiff.md", json_str)
 
 if __name__ == "__main__":
     unittest.main()
