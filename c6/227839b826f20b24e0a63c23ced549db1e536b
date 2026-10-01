@@ -1,0 +1,22 @@
+.mise.toml
+  h_fcacc84ac57fba 1-34
+canonforge/data/sensory_dictionary.json
+  h_fcacc84ac57fba 1-12368
+canonforge/engines/sensory_dictionary.py
+  h_fcacc84ac57fba 317,364-376,386-387,389
+okf_studio/data/sensory_dictionary.json
+  h_fcacc84ac57fba 1-12368
+uv.lock
+  h_fcacc84ac57fba 1-1133
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c6227839b826f20b24e0a63c23ced549db1e536b",
+  "prompts": {},
+  "humans": {
+    "h_fcacc84ac57fba": {
+      "author": "Cid <308343041+convergenceID@users.noreply.github.com>"
+    }
+  }
+}
