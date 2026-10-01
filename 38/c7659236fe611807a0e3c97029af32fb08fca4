@@ -1,0 +1,40 @@
+canonforge/data/obsidian/main.js
+  h_fcacc84ac57fba 1-235
+canonforge/data/obsidian/manifest.json
+  h_fcacc84ac57fba 1-9
+canonforge/data/obsidian/styles.css
+  h_fcacc84ac57fba 1-69
+canonforge/engines/obsidian.py
+  h_fcacc84ac57fba 2-3,8-10,14,20-22,39-40,47-62,75-83,89-91,95-102
+canonforge/engines/pov.py
+  h_fcacc84ac57fba 61
+canonforge/templates/character.md
+  h_fcacc84ac57fba 1-44
+canonforge/templates/equipment.md
+  h_fcacc84ac57fba 1-42
+canonforge/templates/faction.md
+  h_fcacc84ac57fba 1-34
+canonforge/templates/item.md
+  h_fcacc84ac57fba 1-30
+canonforge/templates/monster.md
+  h_fcacc84ac57fba 1-39
+canonforge/templates/quest.md
+  h_fcacc84ac57fba 1-39
+canonforge/templates/scene.md
+  h_fcacc84ac57fba 1-40
+canonforge/templates/skill.md
+  h_fcacc84ac57fba 1-38
+pyproject.toml
+  h_fcacc84ac57fba 73-75
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "38c7659236fe611807a0e3c97029af32fb08fca4",
+  "prompts": {},
+  "humans": {
+    "h_fcacc84ac57fba": {
+      "author": "Cid <308343041+convergenceID@users.noreply.github.com>"
+    }
+  }
+}
