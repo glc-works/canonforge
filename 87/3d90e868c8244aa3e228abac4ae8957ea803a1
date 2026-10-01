@@ -1,0 +1,42 @@
+canonforge/cli/groups.py
+  h_fcacc84ac57fba 38-39
+canonforge/cli/main.py
+  h_fcacc84ac57fba 221-234,240
+canonforge/engines/canvas.py
+  h_fcacc84ac57fba 1-234
+canonforge/engines/metrics/cache.py
+  h_fcacc84ac57fba 7-11
+canonforge/engines/metrics/calculator.py
+  h_fcacc84ac57fba 6,10,12,19-20,111
+canonforge/engines/metrics/registry.py
+  h_fcacc84ac57fba 133-134,138-140,153,163-172,175,183
+canonforge/engines/navigator.py
+  h_fcacc84ac57fba 1-390
+canonforge/engines/polish.py
+  h_fcacc84ac57fba 28-39,107,110-116
+canonforge/engines/prep/locator.py
+  h_fcacc84ac57fba 22,25-29,80,91,96,103-112
+canonforge/engines/profile.py
+  h_fcacc84ac57fba 1-414
+canonforge/engines/timeline.py
+  h_fcacc84ac57fba 215-217,220-240
+canonforge/engines/timeline_query.py
+  h_fcacc84ac57fba 1-321
+canonforge/universe_cli.py
+  h_fcacc84ac57fba 129,305-316
+pyproject.toml
+  h_fcacc84ac57fba 7
+tests/test_dossier_canvas_timeline.py
+  h_fcacc84ac57fba 1-126
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "873d90e868c8244aa3e228abac4ae8957ea803a1",
+  "prompts": {},
+  "humans": {
+    "h_fcacc84ac57fba": {
+      "author": "Cid <308343041+convergenceID@users.noreply.github.com>"
+    }
+  }
+}
