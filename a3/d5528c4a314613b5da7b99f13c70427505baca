@@ -1,0 +1,68 @@
+.gitignore
+  h_fcacc84ac57fba 58-59
+canonforge/__init__.py
+  h_fcacc84ac57fba 8
+canonforge/__main__.py
+  h_fcacc84ac57fba 1-7
+canonforge/engines/compiler/__main__.py
+  h_fcacc84ac57fba 1-7
+canonforge/engines/compiler/analytics.py
+  h_fcacc84ac57fba 6-12
+canonforge/engines/compiler/assembler.py
+  h_fcacc84ac57fba 5,10-20
+canonforge/engines/compiler/cli.py
+  h_fcacc84ac57fba 5,11-12
+canonforge/engines/compiler/epub.py
+  h_fcacc84ac57fba 10-12,153,158,162
+canonforge/engines/db/json_sync.py
+  h_fcacc84ac57fba 6-9
+canonforge/engines/db/scanner.py
+  h_fcacc84ac57fba 8-13,107-110
+canonforge/engines/db/seeder.py
+  h_fcacc84ac57fba 11-15,18-19,53-59,327-330
+canonforge/engines/db/sql_export.py
+  h_fcacc84ac57fba 7,10-12
+canonforge/engines/db/validator.py
+  h_fcacc84ac57fba 25-33
+canonforge/engines/dialogue.py
+  h_fcacc84ac57fba 461
+canonforge/engines/prep/__init__.py
+  h_fcacc84ac57fba 10,17-19,24-26,31,37,40
+canonforge/engines/prep/builder.py
+  h_fcacc84ac57fba 5,9-12,17-36,144-145
+canonforge/engines/prep/locator.py
+  h_fcacc84ac57fba 10-13,69,122,129
+canonforge/engines/relations/__init__.py
+  h_fcacc84ac57fba 12-13,53-54
+canonforge/engines/relations/exporter.py
+  h_fcacc84ac57fba 4-5
+canonforge/engines/relations/graph.py
+  h_fcacc84ac57fba 1,4-11
+canonforge/engines/relations/matrix.py
+  h_fcacc84ac57fba 7-13,15
+canonforge/engines/relations/mutations.py
+  h_fcacc84ac57fba 4,6,11-12,14-15
+canonforge/engines/relations/timeline.py
+  h_fcacc84ac57fba 13-17
+canonforge/engines/sensory_dictionary.py
+  h_fcacc84ac57fba 13-80
+canonforge/engines/sync_db.py
+  h_fcacc84ac57fba 13-33
+canonforge/schemas/chapter.schema.json
+  h_fcacc84ac57fba 37
+pyproject.toml
+  h_fcacc84ac57fba 7
+uv.lock
+  h_fcacc84ac57fba 115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a3d5528c4a314613b5da7b99f13c70427505baca",
+  "prompts": {},
+  "humans": {
+    "h_fcacc84ac57fba": {
+      "author": "Cid <308343041+convergenceID@users.noreply.github.com>"
+    }
+  }
+}
