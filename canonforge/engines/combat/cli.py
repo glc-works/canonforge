@@ -42,8 +42,8 @@ def list_combatants():
 
 def main():
     parser = argparse.ArgumentParser(description="Deterministic CanonForge RPG Turn-Based Combat Simulator")
-    parser.add_argument("--player", default="char_vaelin_pale_weaver", help="Character ID for Player (default: char_vaelin_pale_weaver)")
-    parser.add_argument("--monster", default="mon_ash_stag", help="Monster ID for Enemy (default: mon_ash_stag)")
+    parser.add_argument("--player", default=None, help="Character ID for Player (default: first character in DB)")
+    parser.add_argument("--monster", default=None, help="Monster ID for Enemy (default: first monster in DB)")
     parser.add_argument("--enemy-char", help="Character ID for Enemy Character (PvP duel mode)")
     parser.add_argument("--interactive", action="store_true", help="Interactive round-by-round manual control")
     parser.add_argument("--list", action="store_true", help="List available characters and monsters")
@@ -54,9 +54,16 @@ def main():
         return
 
     conn = get_db_connection()
-    p1 = load_character(conn, args.player)
+    player_id = args.player
+    if not player_id:
+        cur = conn.cursor()
+        cur.execute("SELECT char_id FROM characters LIMIT 1")
+        row = cur.fetchone()
+        player_id = row["char_id"] if row else "player_01"
+
+    p1 = load_character(conn, player_id)
     if not p1:
-        print(f"❌ Error: Player character '{args.player}' not found.")
+        print(f"❌ Error: Player character '{player_id}' not found.")
         conn.close()
         sys.exit(1)
 
@@ -68,9 +75,15 @@ def main():
             sys.exit(1)
         p2.is_player = False # enemy side
     else:
-        p2 = load_monster(conn, args.monster)
+        monster_id = args.monster
+        if not monster_id:
+            cur = conn.cursor()
+            cur.execute("SELECT monster_id FROM monsters LIMIT 1")
+            row = cur.fetchone()
+            monster_id = row["monster_id"] if row else "monster_01"
+        p2 = load_monster(conn, monster_id)
         if not p2:
-            print(f"❌ Error: Monster '{args.monster}' not found.")
+            print(f"❌ Error: Monster '{monster_id}' not found.")
             conn.close()
             sys.exit(1)
 

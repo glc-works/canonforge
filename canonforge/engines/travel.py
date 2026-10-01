@@ -220,7 +220,7 @@ def list_all_places(conn: sqlite3.Connection):
     cur.execute("SELECT place_id, name, location_kind, danger_level, governing_faction FROM places ORDER BY danger_level, name")
     rows = cur.fetchall()
     print("\n" + "=" * 75)
-    print("CANONICAL LOCATIONS OF ORYN (Total: 29)")
+    print(f"CANONICAL UNIVERSE LOCATIONS (Total: {len(rows)})")
     print("=" * 75)
     table_data = [[r["place_id"], r["name"], r["location_kind"], r["governing_faction"], f"Level {r['danger_level']}"] for r in rows]
     if HAS_TABULATE:

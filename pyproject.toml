@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "canonforge"
-version = "0.3.2"
+version = "0.4.0"
 description = "The Git-Native Literary Engineering Studio & Multi-Universe Canon Orchestrator for Novelists"
 readme = "README.md"
 authors = [
@@ -64,7 +64,7 @@ Issues = "https://github.com/glc-works/canonforge/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["canonforge*", "okf_studio*"]
+include = ["canonforge*"]
 
 [tool.setuptools.package-data]
 canonforge = [
@@ -72,8 +72,4 @@ canonforge = [
     "data/*.json",
     "schemas/*.json"
 ]
-okf_studio = [
-    "data/*.yaml",
-    "data/*.json",
-    "schemas/*.json"
-]
+

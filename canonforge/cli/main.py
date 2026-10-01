@@ -1,0 +1,185 @@
+"""
+CanonForge CLI: Unified Command Router & Main Entrypoint
+--------------------------------------------------------------------------------
+Dispatches commands across PROJECT, AUTHORING, AUDITING, WORLDBUILDING,
+PUBLISHING, and AGENT functional pillars.
+"""
+
+import sys
+import argparse
+from pathlib import Path
+
+from canonforge.cli.groups import print_grouped_help, CAPABILITY_GROUPS
+from canonforge.cli.dashboard import (
+    render_dashboard,
+    suggest_similar_command,
+    cmd_list,
+    cmd_stats,
+    cmd_verify,
+)
+from canonforge.cli.new_cmd import (
+    new_universe,
+    new_series,
+    new_book,
+    new_chapter,
+    new_character,
+)
+from canonforge.cli.audit_cmd import cmd_audit, cmd_review
+from canonforge.cli.skill_cmd import cmd_skill_export, cmd_skill_show
+
+def _get_all_valid_commands() -> list:
+    cmds = []
+    for group_cmds in CAPABILITY_GROUPS.values():
+        for cmd_name, _ in group_cmds:
+            cmds.append(cmd_name)
+    # Add common aliases
+    cmds.extend(["scaffold", "polish"])
+    return sorted(list(set(cmds)))
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="cf",
+        description="CanonForge: Git-Native Literary Engineering Studio",
+        add_help=False
+    )
+    parser.add_argument("-h", "--help", action="store_true", help="Show capability groupings")
+    subparsers = parser.add_subparsers(dest="subcommand", help="Sub-commands")
+
+    # 1. PROJECT
+    p_list = subparsers.add_parser("list", help="List all registered universes")
+    p_list.set_defaults(func=cmd_list)
+
+    p_stats = subparsers.add_parser("stats", help="Display prose word count and chapter stats")
+    p_stats.set_defaults(func=cmd_stats)
+
+    p_verify = subparsers.add_parser("verify", help="Run multi-engine verification gates")
+    p_verify.add_argument("universe", nargs="?", default=None, help="Optional universe to verify")
+    p_verify.set_defaults(func=cmd_verify)
+
+    # Scaffolding: cf new <target>
+    p_new = subparsers.add_parser("new", help="Hierarchical scaffolding")
+    new_sub = p_new.add_subparsers(dest="new_type", help="Scaffold target type")
+
+    # cf new universe
+    p_nu = new_sub.add_parser("universe", help="Scaffold a new universe")
+    p_nu.add_argument("slug", help="Slug for the universe (e.g. aetheria)")
+    p_nu.add_argument("--title", help="Display title")
+    p_nu.add_argument("--genre", help="Genre (e.g. 'Epic Fantasy', 'Cyberpunk')")
+    p_nu.add_argument("--sensory-profile", help="Default sensory profile")
+    p_nu.set_defaults(func=new_universe)
+
+    # cf new series
+    p_ns = new_sub.add_parser("series", help="Scaffold a new series under a universe")
+    p_ns.add_argument("slug", help="Slug for the series")
+    p_ns.add_argument("--title", help="Display title")
+    p_ns.add_argument("--universe", "-u", help="Target universe")
+    p_ns.set_defaults(func=new_series)
+
+    # cf new book
+    p_nb = new_sub.add_parser("book", help="Scaffold a new book under a series")
+    p_nb.add_argument("slug", help="Slug for the book")
+    p_nb.add_argument("--title", help="Display title")
+    p_nb.add_argument("--series", "-s", help="Target series")
+    p_nb.add_argument("--universe", "-u", help="Target universe")
+    p_nb.set_defaults(func=new_book)
+
+    # cf new chapter
+    p_nc = new_sub.add_parser("chapter", help="Scaffold a new chapter")
+    p_nc.add_argument("--title", "-t", help="Chapter title")
+    p_nc.add_argument("--book", "-b", help="Book directory or slug")
+    p_nc.add_argument("--act", "-a", type=int, default=1, help="Act number")
+    p_nc.add_argument("--pov", "-p", default="Protagonist", help="POV character")
+    p_nc.add_argument("--setting", help="Setting description")
+    p_nc.add_argument("--universe", "-u", help="Target universe")
+    p_nc.set_defaults(func=new_chapter)
+
+    # cf new character
+    p_nch = new_sub.add_parser("character", help="Scaffold a new character profile")
+    p_nch.add_argument("name", help="Character name")
+    p_nch.add_argument("--faction", "-f", default="Independent", help="Faction")
+    p_nch.add_argument("--role", "-r", default="Protagonist", help="Narrative role")
+    p_nch.add_argument("--pov", action="store_true", default=True, help="Can hold POV")
+    p_nch.add_argument("--universe", "-u", help="Target universe")
+    p_nch.set_defaults(func=new_character)
+
+    # init alias to new universe
+    p_init = subparsers.add_parser("init", aliases=["scaffold"], help="Initialize a new universe")
+    p_init.add_argument("slug", help="Slug for the universe")
+    p_init.add_argument("--title", help="Display title")
+    p_init.add_argument("--genre", help="Genre")
+    p_init.add_argument("--sensory-profile", help="Default sensory profile")
+    p_init.set_defaults(func=new_universe)
+
+    # 2. AUDITING
+    p_audit = subparsers.add_parser("audit", help="Run multi-engine diagnostic audit")
+    p_audit.add_argument("chapter", nargs="?", default="", help="Optional chapter markdown file")
+    p_audit.add_argument("--book", "-b", help="Audit all chapters in specified book")
+    p_audit.add_argument("--format", choices=["text", "json"], default="text", help="Output format")
+    p_audit.set_defaults(func=cmd_audit)
+
+    p_review = subparsers.add_parser("review", aliases=["polish"], help="Generate literary scorecard (/10)")
+    p_review.add_argument("chapter", nargs="?", default="", help="Target chapter markdown file")
+    p_review.add_argument("--format", choices=["text", "json"], default="text", help="Output format")
+    p_review.set_defaults(func=cmd_review)
+
+    # 3. AGENT
+    p_skill = subparsers.add_parser("skill", help="Export agent skills and governance rules")
+    skill_sub = p_skill.add_subparsers(dest="skill_action", help="Skill action")
+
+    p_sk_exp = skill_sub.add_parser("export", help="Export agent rules (.cursorrules, CLAUDE.md, SKILL.md)")
+    p_sk_exp.add_argument("--target", choices=["cursor", "claude", "gemini", "agents", "all"], default="all")
+    p_sk_exp.add_argument("--out-dir", "-o", help="Target directory for export")
+    p_sk_exp.set_defaults(func=cmd_skill_export)
+
+    p_sk_show = skill_sub.add_parser("show", help="Display active agent rules")
+    p_sk_show.set_defaults(func=cmd_skill_show)
+
+    return parser
+
+def main():
+    # If no arguments provided: render anti-deadend dashboard!
+    if len(sys.argv) == 1:
+        render_dashboard()
+        return
+
+    # If --help or -h passed at root: show grouped capability explorer
+    if len(sys.argv) == 2 and sys.argv[1] in ("-h", "--help"):
+        print_grouped_help()
+        return
+
+    first_arg = sys.argv[1]
+
+    # Authoring & Worldbuilding subcommands forwarded directly to universe_cli
+    universe_forward_cmds = {
+        "sensory", "pov", "prose", "thesaurus", "prep",
+        "dialogue", "continuity", "timeline", "secrets",
+        "lore", "relations", "db", "combat", "travel",
+        "compile", "export"
+    }
+    if first_arg in universe_forward_cmds:
+        from canonforge import universe_cli
+        universe_cli.main()
+        return
+
+    # Check for unknown command typo
+    valid_cmds = _get_all_valid_commands()
+    if not first_arg.startswith("-") and first_arg not in valid_cmds:
+        suggest_similar_command(first_arg, valid_cmds)
+        sys.exit(1)
+
+    parser = build_parser()
+    args, unknown = parser.parse_known_args()
+
+    if getattr(args, "func", None):
+        args.func(args)
+    elif args.subcommand == "new" and not getattr(args, "new_type", None):
+        print("\nUsage: cf new <universe|series|book|chapter|character> [options]")
+        print("Run 'cf new --help' or 'cf new chapter --help' for details.\n")
+    elif args.subcommand == "skill" and not getattr(args, "skill_action", None):
+        print("\nUsage: cf skill <export|show> [options]")
+        print("Run 'cf skill export --help' for details.\n")
+    else:
+        render_dashboard()
+
+if __name__ == "__main__":
+    main()

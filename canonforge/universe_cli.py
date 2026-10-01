@@ -231,5 +231,72 @@ def main():
             polish.print_review(res)
         return
 
+    if args.subcommand == "prep":
+        from canonforge.engines.prep import cli as prep_cli
+        sys.argv = [sys.argv[0], *unknown]
+        prep_cli.main()
+        return
+
+    if args.subcommand == "dialogue":
+        from canonforge.engines import dialogue
+        sys.argv = [sys.argv[0], *unknown]
+        dialogue.main()
+        return
+
+    if args.subcommand == "continuity":
+        from canonforge.engines import continuity
+        sys.argv = [sys.argv[0], *unknown]
+        continuity.main()
+        return
+
+    if args.subcommand == "timeline":
+        from canonforge.engines import timeline
+        sys.argv = [sys.argv[0], *unknown]
+        timeline.main()
+        return
+
+    if args.subcommand == "secrets":
+        from canonforge.engines import secrets
+        sys.argv = [sys.argv[0], *unknown]
+        secrets.main()
+        return
+
+    if args.subcommand == "relations":
+        from canonforge.engines.relations import cli as rel_cli
+        sys.argv = [sys.argv[0], *unknown]
+        rel_cli.main()
+        return
+
+    if args.subcommand in ("db", "lore"):
+        from canonforge.engines import sync_db
+        sys.argv = [sys.argv[0], *unknown]
+        sync_db.main()
+        return
+
+    if args.subcommand == "combat":
+        from canonforge.engines.combat import cli as combat_cli
+        sys.argv = [sys.argv[0], *unknown]
+        combat_cli.main()
+        return
+
+    if args.subcommand == "travel":
+        from canonforge.engines import travel
+        sys.argv = [sys.argv[0], *unknown]
+        travel.main()
+        return
+
+    if args.subcommand == "compile":
+        from canonforge.engines.compiler import cli as comp_cli
+        sys.argv = [sys.argv[0], *unknown]
+        comp_cli.main()
+        return
+
+    if args.subcommand == "export":
+        from canonforge.engines.exporter import cli as exp_cli
+        sys.argv = [sys.argv[0], *unknown]
+        exp_cli.main()
+        return
+
 if __name__ == "__main__":
     main()
+

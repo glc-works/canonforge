@@ -324,7 +324,7 @@ def seed_database():
                 domain=domain_key,
                 name=title,
                 role_or_type=default_role,
-                faction_or_region="Oryn Canon Worldbuilding",
+                faction_or_region="Universe Canon Worldbuilding",
                 desc=body,
                 fpath=rel_path
             )

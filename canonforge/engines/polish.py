@@ -489,5 +489,10 @@ def main():
     print_polish_report(report, verbose=args.verbose)
 
 
+# Backward-compatible aliases for review commands
+review_chapter = run_single_pass_audit
+print_review = print_polish_report
+
 if __name__ == "__main__":
     main()
+
