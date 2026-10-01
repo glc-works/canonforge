@@ -35,6 +35,8 @@ CAPABILITY_GROUPS: Dict[str, List[Tuple[str, str]]] = {
         ("secrets", "Information disclosure and dramatic irony tracking gate"),
     ],
     "WORLDBUILDING": [
+        ("scan", "Scan manuscript for unregistered entities & auto-scaffold"),
+        ("link", "Automatically link entity mentions in manuscript to wiki"),
         ("search", "Universal search across wiki dossiers and local game database"),
         ("update", "Update entity attributes, status, and tags with safe diffs"),
         ("lore", "SSOT lore bible validator and entity extractor"),
@@ -50,6 +52,7 @@ CAPABILITY_GROUPS: Dict[str, List[Tuple[str, str]]] = {
     "AGENT": [
         ("skill", "Export agent rules and skills (Cursor, Claude, Antigravity)"),
         ("obsidian", "Install and configure CanonForge Studio Obsidian plugin"),
+        ("hook", "Install and manage Git pre-commit integrity hook"),
     ],
 }
 

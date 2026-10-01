@@ -154,6 +154,46 @@ class TestCliFeatures(unittest.TestCase):
             self.assertIn("- legend", content)
             self.assertIn("Captain Elena navigates the cloud-sea.", content)
 
+    def test_scanner_and_linker(self):
+        from canonforge.engines.scanner import run_entity_scan
+        from canonforge.engines.linker import link_chapter_text
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_p = Path(tmp_dir)
+            wiki_dir = tmp_p / "wiki" / "characters"
+            wiki_dir.mkdir(parents=True)
+            (wiki_dir / "captain-elena.md").write_text("---\ntitle: Captain Elena\n---\n", encoding="utf-8")
+
+            ms_dir = tmp_p / "manuscript" / "series-01" / "book-01" / "chapters"
+            ms_dir.mkdir(parents=True)
+            ch_file = ms_dir / "ch01.md"
+            ch_file.write_text("Captain Elena boarded the airship. She met [[Unknown Lord]].", encoding="utf-8")
+
+            # 1. Test scan
+            res = run_entity_scan(root_dir=tmp_p, scaffold=True)
+            self.assertIn("Unknown Lord", res["unregistered"])
+            self.assertEqual(len(res["scaffolded"]), 1)
+
+            # 2. Test linker
+            linked, count = link_chapter_text("Captain Elena shouted orders to Elena.", [("Captain Elena", "captain-elena", "Captain Elena")])
+            self.assertEqual(count, 1)
+            self.assertIn("[[captain-elena|Captain Elena]]", linked)
+
+    def test_git_hook(self):
+        from canonforge.engines.hooks import install_git_hook, uninstall_git_hook, check_hook_status
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_p = Path(tmp_dir)
+            (tmp_p / ".git").mkdir()
+
+            h_file = install_git_hook(tmp_p)
+            self.assertTrue(h_file.is_file())
+            self.assertTrue(check_hook_status(tmp_p))
+
+            uninstalled = uninstall_git_hook(tmp_p)
+            self.assertTrue(uninstalled)
+            self.assertFalse(check_hook_status(tmp_p))
+
 if __name__ == "__main__":
     unittest.main()
 

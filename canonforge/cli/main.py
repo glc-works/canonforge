@@ -169,6 +169,27 @@ def main():
         obsidian.main()
         return
 
+    # Scan Unregistered Entities & Auto-Scaffold
+    if first_arg == "scan":
+        from canonforge.engines import scanner
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        scanner.main()
+        return
+
+    # Semantic Entity Wikilinker
+    if first_arg == "link":
+        from canonforge.engines import linker
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        linker.main()
+        return
+
+    # Git Pre-Commit Hook Manager
+    if first_arg == "hook":
+        from canonforge.engines import hooks
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        hooks.main()
+        return
+
     # Search / Lore Query command
     if first_arg == "search":
         from canonforge.engines import search
