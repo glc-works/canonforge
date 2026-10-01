@@ -1,0 +1,32 @@
+canonforge/engines/continuity.py
+  h_fcacc84ac57fba 22-24,28-29
+canonforge/engines/new_chapter.py
+  h_fcacc84ac57fba 16-19,94
+canonforge/engines/polish.py
+  h_fcacc84ac57fba 23-26,89,96,114
+canonforge/engines/pov.py
+  h_fcacc84ac57fba 25-28
+canonforge/engines/prose.py
+  h_fcacc84ac57fba 19-22
+canonforge/engines/schemas.py
+  h_fcacc84ac57fba 26-32
+canonforge/engines/secrets.py
+  h_fcacc84ac57fba 23-27
+canonforge/engines/timeline.py
+  h_fcacc84ac57fba 25-30
+canonforge/engines/toc.py
+  h_fcacc84ac57fba 29-32
+canonforge/engines/travel.py
+  h_fcacc84ac57fba 31-34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7d12744547680d104e635cac317723c5374dda09",
+  "prompts": {},
+  "humans": {
+    "h_fcacc84ac57fba": {
+      "author": "Cid <308343041+convergenceID@users.noreply.github.com>"
+    }
+  }
+}
