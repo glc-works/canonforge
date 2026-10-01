@@ -63,16 +63,27 @@ def get_book_registry() -> List[Dict[str, Any]]:
                 except Exception:
                     pass
 
-            book_title = toc_meta.get("title", b_dir.name.replace("-", " ").title())
-            book_id = toc_meta.get("book_id", toc_meta.get("book", f"{s_dir.name}/{b_dir.name}"))
+            b_meta = toc_meta.get("book") if isinstance(toc_meta.get("book"), dict) else {}
+            book_title = (
+                toc_meta.get("title")
+                or b_meta.get("title")
+                or b_dir.name.replace("-", " ").title()
+            )
+            book_id = (
+                toc_meta.get("book_id")
+                or b_meta.get("id")
+                or b_meta.get("slug")
+                or (toc_meta.get("book") if isinstance(toc_meta.get("book"), str) else None)
+                or f"{s_dir.name}/{b_dir.name}"
+            )
 
             aliases = [
                 str(counter),
                 f"b{counter}",
                 b_dir.name,
-                book_id,
+                str(book_id),
             ]
-            for word in re.findall(r"[a-zA-Z0-9]+", book_title.lower()):
+            for word in re.findall(r"[a-zA-Z0-9]+", str(book_title).lower()):
                 if len(word) >= 4 and word not in ("the", "book", "saga", "series"):
                     aliases.append(word)
 

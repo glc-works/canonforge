@@ -77,8 +77,12 @@ def build_cast_matrix(cast_names: List[str], data: Dict[str, Any], ao_year: Opti
 def audit_chapter_relations(chapter_file: Path, data: Dict[str, Any]) -> bool:
     """Scan a chapter file and cross-reference character interaction dynamics using its specific chapter anchor."""
     if not chapter_file.exists():
-        print(f"❌ Chapter file not found: {chapter_file}")
-        return False
+        found = list(Path.cwd().glob(f"manuscript/**/{chapter_file.name}"))
+        if found:
+            chapter_file = found[0]
+        else:
+            print(f"❌ Chapter file not found: {chapter_file}")
+            return False
         
     content = chapter_file.read_text(encoding="utf-8")
     all_names = get_all_characters(data)

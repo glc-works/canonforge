@@ -68,7 +68,7 @@ def main():
     p_thes.add_argument("--format", choices=["text", "json"], default="text", help="Output format (text/json)")
 
     # Additional forwarded subcommands
-    for fwd_cmd in ["studio", "interactive", "prep", "dialogue", "continuity", "timeline", "secrets", "relations", "db", "lore", "combat", "travel", "compile", "export", "profile", "canvas", "appearances"]:
+    for fwd_cmd in ["studio", "interactive", "prep", "dialogue", "continuity", "timeline", "secrets", "relations", "db", "lore", "combat", "travel", "compile", "export", "profile", "canvas", "appearances", "impact"]:
         subparsers.add_parser(fwd_cmd)
 
     args, unknown = parser.parse_known_args()
@@ -211,6 +211,12 @@ def main():
         from canonforge.engines import secrets
         sys.argv = [sys.argv[0], *unknown]
         secrets.main()
+        return
+
+    if args.subcommand == "impact":
+        from canonforge.engines import impact
+        sys.argv = [sys.argv[0], *unknown]
+        impact.main()
         return
 
     if args.subcommand == "relations":

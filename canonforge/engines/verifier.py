@@ -93,6 +93,12 @@ def verify_universe(universe_dir: Path) -> bool:
             "cmd": [py_exec, str(rel_test)],
             "critical": True,
         })
+    elif (u_dir / "wiki" / "database" / "relationships.json").is_file() or (u_dir / "data" / "character_relationships.json").is_file() or (u_dir / "relationships.json").is_file():
+        suites.append({
+            "name": "Character Relationship Graph & Dynamic Continuity Suite",
+            "cmd": [py_exec, "-m", "canonforge.engines.relations", "audit", sample_ch],
+            "critical": True,
+        })
 
     # 6. Authoring Tools Suite (Scene Prep & Unified Polish)
     auth_test = u_dir / "scripts" / "test_authoring_tools.py"
@@ -100,6 +106,12 @@ def verify_universe(universe_dir: Path) -> bool:
         suites.append({
             "name": "Authoring Tools Suite (Scene Prep & Unified Polish)",
             "cmd": [py_exec, str(auth_test)],
+            "critical": True,
+        })
+    else:
+        suites.append({
+            "name": "Authoring Tools Suite (Scene Prep & Unified Polish)",
+            "cmd": [py_exec, "-m", "canonforge.engines.polish", sample_ch],
             "critical": True,
         })
 

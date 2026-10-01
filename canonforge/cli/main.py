@@ -28,6 +28,20 @@ from canonforge.cli.new_cmd import (
 from canonforge.cli.audit_cmd import cmd_audit, cmd_review
 from canonforge.cli.skill_cmd import cmd_skill_export, cmd_skill_show
 
+def _dispatch_impact(args):
+    from canonforge.engines import impact
+    u_root = Path(args.universe).resolve() if getattr(args, "universe", None) else None
+    res = impact.run_impact_analysis(
+        universe_root=u_root,
+        query=getattr(args, "query", ""),
+        keywords=getattr(args, "keywords", []),
+        character=getattr(args, "character", None),
+        milestone=getattr(args, "milestone", None),
+        series_filter=getattr(args, "series", None),
+        book_filter=getattr(args, "book", None),
+    )
+    impact.render_impact_report(res, output_format=getattr(args, "format", "text"))
+
 def _get_all_valid_commands() -> list:
     cmds = []
     for group_cmds in CAPABILITY_GROUPS.values():
@@ -134,6 +148,18 @@ def build_parser() -> argparse.ArgumentParser:
     p_review.add_argument("chapter", nargs="?", default="", help="Target chapter markdown file")
     p_review.add_argument("--format", choices=["text", "json"], default="text", help="Output format")
     p_review.set_defaults(func=cmd_review)
+
+    # Narrative Impact Analyzer
+    p_impact = subparsers.add_parser("impact", help="Analyze narrative blast radius and plot causality across all books")
+    p_impact.add_argument("query", nargs="?", default="", help="Keyword, phrase, or plot point term")
+    p_impact.add_argument("--keywords", "-k", nargs="*", default=[], help="Additional keywords to trace")
+    p_impact.add_argument("--character", "-c", help="Target character name or ID to trace")
+    p_impact.add_argument("--milestone", "-m", help="Target milestone ID to trace")
+    p_impact.add_argument("--series", "-s", help="Filter to specific series slug")
+    p_impact.add_argument("--book", "-b", help="Filter to specific book slug")
+    p_impact.add_argument("--format", choices=["text", "json"], default="text", help="Output format")
+    p_impact.add_argument("--universe", "-u", help="Path to universe root")
+    p_impact.set_defaults(func=_dispatch_impact)
 
     # 3. AGENT
     p_skill = subparsers.add_parser("skill", help="Export agent skills and governance rules")
@@ -246,13 +272,20 @@ def main():
         interactive.main()
         return
 
+    # Narrative Impact command
+    if first_arg == "impact":
+        from canonforge.engines import impact
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        impact.main()
+        return
+
     # Authoring & Worldbuilding subcommands forwarded directly to universe_cli
     universe_forward_cmds = {
         "sensory", "pov", "prose", "thesaurus", "prep",
         "dialogue", "continuity", "timeline", "secrets",
         "lore", "relations", "db", "combat", "travel",
         "compile", "profile", "canvas", "appearances",
-        "studio", "interactive"
+        "studio", "interactive", "impact"
     }
     if first_arg in universe_forward_cmds:
         from canonforge import universe_cli
