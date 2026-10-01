@@ -409,7 +409,9 @@ def run_consistency_audit(
     infos = [d for d in all_diagnostics if d.get("severity") == "info"]
 
     if output_format == "json":
+        has_failures = len(errors) > 0 or (strict and len(warnings) > 0)
         result = {
+            "success": not has_failures,
             "universe": u_root.name,
             "total_chapters_scanned": total_chapters_scanned,
             "total_points_validated": total_points_validated,
