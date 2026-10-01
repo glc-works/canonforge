@@ -1,0 +1,30 @@
+canonforge/cli/groups.py
+  h_fcacc84ac57fba 37
+canonforge/cli/main.py
+  h_fcacc84ac57fba 31-44,152-163,275-281,288
+canonforge/engines/impact.py
+  h_fcacc84ac57fba 1-404
+canonforge/engines/navigator.py
+  h_fcacc84ac57fba 66-78,84,86
+canonforge/engines/prep/__main__.py
+  h_fcacc84ac57fba 1-7
+canonforge/engines/relations/__main__.py
+  h_fcacc84ac57fba 1-7
+canonforge/engines/relations/matrix.py
+  h_fcacc84ac57fba 80-85
+canonforge/engines/verifier.py
+  h_fcacc84ac57fba 96-101,111-116
+canonforge/universe_cli.py
+  h_fcacc84ac57fba 71,216-221
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e17b0f542e0d220de7e1f7c4a0d9d6ad307a0ea0",
+  "prompts": {},
+  "humans": {
+    "h_fcacc84ac57fba": {
+      "author": "Cid <308343041+convergenceID@users.noreply.github.com>"
+    }
+  }
+}
