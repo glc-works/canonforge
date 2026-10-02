@@ -1,0 +1,24 @@
+canonforge/__init__.py
+  h_fcacc84ac57fba 8
+canonforge/cli/audit_cmd.py
+  h_fcacc84ac57fba 197-204
+canonforge/core/entities.py
+  h_fcacc84ac57fba 1-303
+pyproject.toml
+  h_fcacc84ac57fba 7
+tests/test_cli_features.py
+  h_fcacc84ac57fba 222-253
+uv.lock
+  h_fcacc84ac57fba 115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2ad7d8946e0702f6bcf39b4903804ea6f8a18b2c",
+  "prompts": {},
+  "humans": {
+    "h_fcacc84ac57fba": {
+      "author": "Cid <308343041+convergenceID@users.noreply.github.com>"
+    }
+  }
+}
