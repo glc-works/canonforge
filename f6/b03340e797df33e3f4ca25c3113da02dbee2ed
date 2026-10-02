@@ -1,0 +1,28 @@
+canonforge/__init__.py
+  h_fcacc84ac57fba 8
+canonforge/cli/groups.py
+  h_fcacc84ac57fba 24,31
+canonforge/cli/main.py
+  h_fcacc84ac57fba 428-439
+canonforge/engines/pacing.py
+  h_fcacc84ac57fba 1-323
+canonforge/engines/watch.py
+  h_fcacc84ac57fba 1-205
+pyproject.toml
+  h_fcacc84ac57fba 7
+tests/test_cli_features.py
+  h_fcacc84ac57fba 195-220
+uv.lock
+  h_fcacc84ac57fba 115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f6b03340e797df33e3f4ca25c3113da02dbee2ed",
+  "prompts": {},
+  "humans": {
+    "h_fcacc84ac57fba": {
+      "author": "Cid <308343041+convergenceID@users.noreply.github.com>"
+    }
+  }
+}
