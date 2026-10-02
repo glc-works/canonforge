@@ -144,6 +144,14 @@ def audit_chapter_pov(file_path: Path) -> Dict[str, Any]:
                         cast = [c.split()[0] for c in data["characters"] if isinstance(c, str)]
             except Exception:
                 pass
+
+            # Robust fallback if yaml module is missing or failed
+            if default_pov == "Unknown":
+                pov_match = re.search(r"^pov:\s*(.*?)$", fm_text, re.MULTILINE)
+                if pov_match:
+                    p_val = pov_match.group(1).strip().strip('"').strip("'")
+                    if p_val and not p_val.startswith("{"):
+                        default_pov = p_val
             body_text = parts[2]
         else:
             body_text = raw_text
