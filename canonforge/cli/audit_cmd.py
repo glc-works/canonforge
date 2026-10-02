@@ -196,6 +196,14 @@ def run_chapter_audit(ch_file: Path) -> List[Dict[str, Any]]:
     except Exception:
         pass
 
+    # 6. Obsidian Wikilink & Entity Alias Integrity Audit
+    try:
+        from canonforge.core.entities import validate_chapter_wikilinks
+        link_diags = validate_chapter_wikilinks(ch_file)
+        diagnostics.extend(link_diags)
+    except Exception:
+        pass
+
     return diagnostics
 
 

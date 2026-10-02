@@ -219,6 +219,38 @@ class TestCliFeatures(unittest.TestCase):
         self.assertIn("[SENSORY RADAR]", out)
         self.assertIn("[HEADS-UP LITERARY LINTER]", out)
 
+    def test_entities_and_alias_resolver(self):
+        from canonforge.core.entities import build_universe_entity_index, resolve_wikilink, validate_chapter_wikilinks
+        aetheria_dir = REPO_ROOT / "examples" / "aetheria"
+        index = build_universe_entity_index(aetheria_dir)
+
+        # 1. Resolve exact title / stem
+        valid, ent, sugg = resolve_wikilink("captain-orlov", index)
+        self.assertTrue(valid)
+        self.assertIsNotNone(ent)
+
+        # 2. Resolve name or title
+        valid, ent, sugg = resolve_wikilink("Captain Orlov", index)
+        self.assertTrue(valid)
+
+        # 3. Resolve chapter
+        valid, ent, sugg = resolve_wikilink("ch01-the-iron-skiff", index)
+        self.assertTrue(valid)
+
+        # 4. Resolve typo with fuzzy match
+        valid, ent, sugg = resolve_wikilink("captain-orlovv", index)
+        self.assertFalse(valid)
+        self.assertIn("captain-orlov", sugg.lower())
+
+        # 5. Validate markdown with broken link
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            test_file = Path(tmp_dir) / "test_ch.md"
+            test_file.write_text("She looked at [[captain-orlov|Orlov]] and [[captain-orlovv|the pilot]].", encoding="utf-8")
+            diags = validate_chapter_wikilinks(test_file, index=index)
+            self.assertEqual(len(diags), 1)
+            self.assertEqual(diags[0]["code"], "LNK001")
+            self.assertIn("captain-orlov", diags[0]["suggestion"])
+
 if __name__ == "__main__":
     unittest.main()
 
