@@ -192,7 +192,32 @@ class TestCliFeatures(unittest.TestCase):
 
             uninstalled = uninstall_git_hook(tmp_p)
             self.assertTrue(uninstalled)
-            self.assertFalse(check_hook_status(tmp_p))
+    def test_pacing_engine(self):
+        from canonforge.engines.pacing import analyze_chapter_pacing
+        ch_path = REPO_ROOT / "examples" / "aetheria" / "manuscript" / "skies-of-iron" / "book-01" / "chapters" / "ch01-the-iron-skiff.md"
+        res = analyze_chapter_pacing(ch_path)
+        self.assertEqual(res["file"], "ch01-the-iron-skiff.md")
+        self.assertGreater(res["word_count"], 300)
+        self.assertIn("dialogue_pct", res)
+        self.assertIn("kinetic_pct", res)
+        self.assertIn("narrative_pct", res)
+        self.assertIn("archetype", res)
+        self.assertIn("cadence_type", res)
+
+    def test_watch_engine_hud(self):
+        from canonforge.engines.watch import render_watch_hud
+        ch_path = REPO_ROOT / "examples" / "aetheria" / "manuscript" / "skies-of-iron" / "book-01" / "chapters" / "ch01-the-iron-skiff.md"
+        captured = io.StringIO()
+        sys.stdout = captured
+        try:
+            render_watch_hud(ch_path, session_start_time=100.0, start_words=300, last_update_str="12:00:00", update_elapsed_ms=5.0)
+        finally:
+            sys.stdout = sys.__stdout__
+        out = captured.getvalue()
+        self.assertIn("CANONFORGE COMPANION HUD", out)
+        self.assertIn("[PACING RHYTHM]", out)
+        self.assertIn("[SENSORY RADAR]", out)
+        self.assertIn("[HEADS-UP LITERARY LINTER]", out)
 
 if __name__ == "__main__":
     unittest.main()

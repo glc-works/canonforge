@@ -5,6 +5,6 @@ The Git-Native Multi-Universe Authoring, Sensory & Integrity Studio for Novelist
 Enforces the OKF v0.3 specification across multi-tier novel universes.
 """
 
-__version__ = "0.4.7"
+__version__ = "0.4.8"
 __author__ = "GLC Works"
 __license__ = "MIT"

@@ -425,6 +425,18 @@ def main():
         metrics_cli.main()
         return
 
+    if first_arg == "watch":
+        from canonforge.engines import watch
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        watch.main()
+        return
+
+    if first_arg == "pacing":
+        from canonforge.engines import pacing
+        sys.argv = [sys.argv[0], *sys.argv[2:]]
+        pacing.main()
+        return
+
     # Check for unknown command typo
     valid_cmds = _get_all_valid_commands()
     if not first_arg.startswith("-") and first_arg not in valid_cmds:

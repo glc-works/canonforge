@@ -21,12 +21,14 @@ CAPABILITY_GROUPS: Dict[str, List[Tuple[str, str]]] = {
     ],
     "AUTHORING": [
         ("prep", "Prepare authoring brief and drafting context pack"),
+        ("watch", "Live in-flight companion daemon (telemetry, sensory HUD, session deltas)"),
         ("dialogue", "Audit dialogue beats, subtext, and speech tags"),
         ("play", "Interactive Ink branching dialogue runner & HTML player"),
         ("thesaurus", "Lookup evocative sensory synonyms and antonyms"),
     ],
     "AUDITING": [
         ("audit", "Comprehensive multi-engine audit emitting diagnostic codes"),
+        ("pacing", "Visual rhythm & balance audit (dialogue vs kinetic vs narrative ratios)"),
         ("review", "Single-pass literary review and benchmark scorecard (/10)"),
         ("sensory", "5-senses radar audit and 4-sense window compliance"),
         ("pov", "Deep 3rd Limited POV audit (no head-hopping, physicalized emotion)"),
