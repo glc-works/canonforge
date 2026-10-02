@@ -1,0 +1,18 @@
+canonforge/__init__.py
+  h_fcacc84ac57fba 8
+canonforge/engines/pov.py
+  h_fcacc84ac57fba 147-154
+pyproject.toml
+  h_fcacc84ac57fba 7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "dfad4e249cdcde5d5edf63658a084f81d505b2f0",
+  "prompts": {},
+  "humans": {
+    "h_fcacc84ac57fba": {
+      "author": "Cid <308343041+convergenceID@users.noreply.github.com>"
+    }
+  }
+}
